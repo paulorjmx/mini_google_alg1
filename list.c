@@ -3,14 +3,19 @@
 #include "inc/list.h"
 #include "inc/keywords.h"
 
-struct list
+typedef struct no
 {
     unsigned char cod[4];
     char nome[50];
     unsigned int relevancia;
     char link[100];
     KEYWORDS *keyword;
-    struct list *prox;
+    struct no *prox;
+}NO;
+
+struct list
+{
+    NO *inicio, *fim;
     int tamanho;
 };
 
@@ -24,12 +29,9 @@ LIST *create_list()
     }
     else
     {
-        new->cod = NULL;
-        new->nome = NULL;
-        new->relevancia = 0;
-        new->link = NULL;
-        new->keywords = NULL;
-        tamanho = -1;
+        new->inicio = NULL;
+        new->fim = NULL;
+        new->tamanho = 0;
     }
 
     return new;
@@ -38,9 +40,9 @@ LIST *create_list()
 
 void erase_list(LIST *begin)
 {
-    LIST* pt_aux = NULL;
-    for(pt_aux = begin->prox; pt_aux != NULL; begin = pt_aux; pt_aux = pt_aux->prox)
+    NO* pt_aux = NULL, pt_aux2 = NULL;
+    for(pt_aux = begin->inicio; pt_aux != NULL; pt_aux2 = pt_aux; pt_aux = pt_aux->prox)
     {
-        free(begin);
+        free(pt_aux2);
     }
 }
