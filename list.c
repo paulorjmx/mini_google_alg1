@@ -5,7 +5,7 @@
 
 typedef struct no
 {
-    unsigned char cod[4];
+    unsigned int cod;
     char nome[50];
     unsigned int relevancia;
     char link[100];
@@ -37,6 +37,35 @@ LIST *create_list()
     return new;
 }
 
+
+void insert_node(LIST *l, unsigned int code, char nome[], unsigned int relevancia, char link[])
+{
+    NO *new = (NO *) malloc(sizeof(NO));
+    if(new != NULL)
+    {
+        new->cod = code;
+        strcpy(new->nome, nome);
+        new->relevancia = relevancia;
+        strcpy(new->link, link);
+        new->prox = NULL;
+        if(l->tamanho == 0)
+        {
+            l->inicio = new;
+            l->fim = l->inicio;
+        }
+        else
+        {
+            l->fim->prox = new;
+            l->fim = new;
+        }
+        l->tamanho++;
+    }
+    else
+    {
+        printf("NAO FOI POSSIVEL ALOCAR O NO\n");
+        new = NULL;
+    }
+}
 
 void erase_list(LIST *begin)
 {
