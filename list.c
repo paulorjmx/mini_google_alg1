@@ -67,11 +67,50 @@ void insert_node(LIST *l, unsigned int code, char nome[], unsigned int relevanci
     }
 }
 
+void update_relevance(LIST *begin, unsigned int relevancia, unsigned int cod)
+{
+    NO *ptr = NULL;
+    if(begin != NULL && begin->tamanho > 0)
+    {
+        for(ptr =  begin->inicio; ptr->cod != cod && ptr != NULL; ptr = ptr->prox) { }
+        if(ptr != NULL)
+        {
+            ptr->relevancia = relevancia;
+        }
+        else
+        {
+            printf("O ELEMENTO NAO ESTA CADASTRADO\n");
+        }
+    }
+}
+
+void remove_site(LIST *begin, unsigned int cod)
+{
+    NO *ptr = NULL;
+    if(begin != NULL && begin->tamanho > 0)
+    {
+        for(ptr =  begin->inicio; ptr->cod != cod && ptr != NULL; ptr = ptr->prox) { }
+        if(ptr != NULL)
+        {
+            
+        }
+        else
+        {
+            printf("O ELEMENTO NAO ESTA CADASTRADO\n");
+        }
+    }
+}
+
 void erase_list(LIST *begin)
 {
-    NO* pt_aux = NULL, pt_aux2 = NULL;
-    for(pt_aux = begin->inicio; pt_aux != NULL; pt_aux2 = pt_aux; pt_aux = pt_aux->prox)
+    if(begin != NULL && begin->tamanho > 0)
     {
-        free(pt_aux2);
+        NO* pt_aux = NULL, pt_aux2 = NULL;
+        for(pt_aux = begin->inicio; pt_aux != NULL; pt_aux2 = pt_aux; pt_aux = pt_aux->prox)
+        {
+            free(pt_aux2);
+        }
+        free(pt_aux);
+        free(begin);
     }
 }
