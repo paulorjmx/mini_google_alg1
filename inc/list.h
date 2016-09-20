@@ -4,6 +4,8 @@
         typedef struct list LIST;
 
         LIST *create_list();
-        void add_node(LIST *begin, char *cod, char *nome, unsigned int relevancia, char *link, KEYWORDS *keywords);
+        void insert_node(LIST *l, unsigned int code, char nome[], unsigned int relevancia, char link[]);
+        void update_relevance(LIST *begin, unsigned int relevancia, unsigned int cod);
+        void remove_site(LIST *begin, unsigned cod);
         void erase_list(LIST *begin);
 #endif
