@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "inc/list.h"
 #include "inc/keywords.h"
 
@@ -86,13 +87,25 @@ void update_relevance(LIST *begin, unsigned int relevancia, unsigned int cod)
 
 void remove_site(LIST *begin, unsigned int cod)
 {
-    NO *ptr = NULL;
+    NO *ptr = NULL, *ptr2 = NULL;
     if(begin != NULL && begin->tamanho > 0)
     {
-        for(ptr =  begin->inicio; ptr->cod != cod && ptr != NULL; ptr = ptr->prox) { }
+        for(ptr2 = NULL, ptr =  begin->inicio; ptr->cod != cod && ptr != NULL; ptr2 = ptr, ptr = ptr->prox) { }
         if(ptr != NULL)
         {
-            
+            if(ptr == begin->inicio)
+            {
+                ptr2 = ptr->prox;
+                begin->inicio = ptr2;
+                ptr->prox = NULL;
+            }
+            else
+            {
+                ptr2->prox = ptr->prox;
+                ptr->prox = NULL;
+            }
+            begin->tamanho--;
+            free(ptr);
         }
         else
         {
@@ -103,10 +116,10 @@ void remove_site(LIST *begin, unsigned int cod)
 
 void erase_list(LIST *begin)
 {
+    NO* pt_aux = NULL, *pt_aux2 = NULL;
     if(begin != NULL && begin->tamanho > 0)
     {
-        NO* pt_aux = NULL, pt_aux2 = NULL;
-        for(pt_aux = begin->inicio; pt_aux != NULL; pt_aux2 = pt_aux; pt_aux = pt_aux->prox)
+        for(pt_aux = begin->inicio; pt_aux != NULL; pt_aux2 = pt_aux, pt_aux = pt_aux->prox)
         {
             free(pt_aux2);
         }
