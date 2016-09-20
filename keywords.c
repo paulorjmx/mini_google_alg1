@@ -15,7 +15,7 @@ KEYWORDS *create_keywords()
     KEYWORDS *new = (KEYWORDS *) malloc(sizeof(KEYWORDS));
     if(new != NULL)
     {
-        new->words = NULL;
+        new->word = NULL;
         new->tamanho = -1;
     }
     else
@@ -65,7 +65,7 @@ void destroy_keywords(KEYWORDS *k)
     {
         for(aux = k->prox; aux != NULL; k = aux, aux = aux->prox)
         {
-            free(k->words);
+            free(k->word);
             free(k);
         }
     }
