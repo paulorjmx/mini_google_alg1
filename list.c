@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "inc/list.h"
 #include "inc/keywords.h"
+#include "inc/list.h"
 
 typedef struct no
 {
@@ -39,12 +39,12 @@ LIST *create_list()
 }
 
 
-void insert_node(LIST *l, unsigned int code, char nome[], unsigned int relevancia, char link[])
+void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevancia, char link[], KEYWORDS *palavrachave)
 {
     NO *new = (NO *) malloc(sizeof(NO));
     if(new != NULL)
     {
-        new->cod = code;
+        new->cod = codigo;
         strcpy(new->nome, nome);
         new->relevancia = relevancia;
         strcpy(new->link, link);
@@ -68,12 +68,12 @@ void insert_node(LIST *l, unsigned int code, char nome[], unsigned int relevanci
     }
 }
 
-void update_relevance(LIST *begin, unsigned int relevancia, unsigned int cod)
+void update_relevance(LIST *l, unsigned int relevancia, unsigned int cod)
 {
     NO *ptr = NULL;
-    if(begin != NULL && begin->tamanho > 0)
+    if(l != NULL && l->tamanho > 0)
     {
-        for(ptr =  begin->inicio; ptr->cod != cod && ptr != NULL; ptr = ptr->prox) { }
+        for(ptr =  l->inicio; ptr->cod != cod && ptr != NULL; ptr = ptr->prox) { }
         if(ptr != NULL)
         {
             ptr->relevancia = relevancia;
@@ -85,18 +85,18 @@ void update_relevance(LIST *begin, unsigned int relevancia, unsigned int cod)
     }
 }
 
-void remove_site(LIST *begin, unsigned int cod)
+void remove_site(LIST *l, unsigned int cod)
 {
     NO *ptr = NULL, *ptr2 = NULL;
-    if(begin != NULL && begin->tamanho > 0)
+    if(l != NULL && l->tamanho > 0)
     {
-        for(ptr2 = NULL, ptr =  begin->inicio; ptr->cod != cod && ptr != NULL; ptr2 = ptr, ptr = ptr->prox) { }
+        for(ptr2 = NULL, ptr =  l->inicio; ptr->cod != cod && ptr != NULL; ptr2 = ptr, ptr = ptr->prox) { }
         if(ptr != NULL)
         {
-            if(ptr == begin->inicio)
+            if(ptr == l->inicio)
             {
                 ptr2 = ptr->prox;
-                begin->inicio = ptr2;
+                l->inicio = ptr2;
                 ptr->prox = NULL;
             }
             else
@@ -104,7 +104,7 @@ void remove_site(LIST *begin, unsigned int cod)
                 ptr2->prox = ptr->prox;
                 ptr->prox = NULL;
             }
-            begin->tamanho--;
+            l->tamanho--;
             free(ptr);
         }
         else
@@ -114,16 +114,23 @@ void remove_site(LIST *begin, unsigned int cod)
     }
 }
 
-void erase_list(LIST *begin)
+
+unsigned int get_last_cod(LIST *l)
+{
+    return l->fim->cod;
+}
+
+void erase_list(LIST *l)
 {
     NO* pt_aux = NULL, *pt_aux2 = NULL;
-    if(begin != NULL && begin->tamanho > 0)
+    if(l != NULL && l->tamanho > 0)
     {
-        for(pt_aux = begin->inicio; pt_aux != NULL; pt_aux2 = pt_aux, pt_aux = pt_aux->prox)
+        for(pt_aux = l->inicio; pt_aux != NULL; pt_aux2 = pt_aux, pt_aux = pt_aux->prox)
         {
+            destroy_keywords(pt_aux2->keyword);
             free(pt_aux2);
         }
         free(pt_aux);
-        free(begin);
+        free(l);
     }
 }
