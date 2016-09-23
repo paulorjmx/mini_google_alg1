@@ -1,5 +1,6 @@
 #ifndef LIST_H
     #define LIST_H
+        #include "keywords.h"
         typedef struct list LIST;
 
         LIST *create_list();
@@ -8,4 +9,5 @@
         void remove_site(LIST *l, unsigned cod);
         void erase_list(LIST *l);
         unsigned int get_last_cod(LIST *l);
+        void print_list(LIST *l);
 #endif

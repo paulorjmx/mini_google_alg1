@@ -5,5 +5,6 @@
 
     KEYWORDS *create_keywords();
     void insert_keyword(KEYWORDS *begin, char *word);
+    void print_keywords(KEYWORDS *k);
     void destroy_keywords(KEYWORDS *begin);
 #endif
