@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "inc/keywords.h"
 #include "inc/list.h"
 
 typedef struct no
@@ -19,6 +18,20 @@ struct list
     NO *inicio, *fim;
     int tamanho;
 };
+
+void print_list(LIST *l)
+{
+    NO *aux = l->inicio;
+    while(aux != NULL)
+    {
+        printf("CODIGO: %u\n", aux->cod);
+        printf("NOME: %s\n", aux->nome);
+        printf("RELEVANCIA: %u\n", aux->relevancia);
+        printf("LINK: %s\n", aux->link);
+        print_keywords(aux->keyword);
+        aux = aux->prox;
+    }
+}
 
 LIST *create_list()
 {
@@ -48,6 +61,7 @@ void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevan
         strcpy(new->nome, nome);
         new->relevancia = relevancia;
         strcpy(new->link, link);
+        new->keyword = palavrachave;
         new->prox = NULL;
         if(l->tamanho == 0)
         {
@@ -125,7 +139,7 @@ void erase_list(LIST *l)
     NO* pt_aux = NULL, *pt_aux2 = NULL;
     if(l != NULL && l->tamanho > 0)
     {
-        for(pt_aux = l->inicio; pt_aux != NULL; pt_aux2 = pt_aux, pt_aux = pt_aux->prox)
+        for(pt_aux = l->inicio->prox, pt_aux2 = l->inicio; pt_aux != NULL; pt_aux2 = pt_aux, pt_aux = pt_aux->prox)
         {
             destroy_keywords(pt_aux2->keyword);
             free(pt_aux2);

@@ -3,11 +3,17 @@
 #include <string.h>
 #include "inc/keywords.h"
 
-struct keywords
+typedef struct nok
 {
     char *word;
+    struct nok *prox;
+}NOK;
+
+struct keywords
+{
+    NOK *inicio;
+    NOK *fim;
     int tamanho;
-    struct keywords *prox;
 };
 
 KEYWORDS *create_keywords()
@@ -15,8 +21,9 @@ KEYWORDS *create_keywords()
     KEYWORDS *new = (KEYWORDS *) malloc(sizeof(KEYWORDS));
     if(new != NULL)
     {
-        new->word = NULL;
-        new->tamanho = -1;
+        new->inicio = NULL;
+        new->fim = NULL;
+        new->tamanho = 0;
     }
     else
     {
@@ -29,21 +36,39 @@ KEYWORDS *create_keywords()
 
 void insert_keyword(KEYWORDS *begin, char *word)
 {
-    KEYWORDS *aux = NULL;
+    NOK *aux = NULL;
     if(begin != NULL && begin->tamanho < 10)
     {
-        for(aux = begin; aux->prox != NULL; aux = aux->prox)
+        if(begin->inicio == NULL)
         {
-        }
-        aux->word = (char *) malloc(sizeof(char) * strlen(word));
-        if(aux->word != NULL)
-        {
-            aux->word = strcpy(aux->word, word);
+            begin->inicio = (NOK *) malloc(sizeof(NOK));
+            if(begin->inicio != NULL)
+            {
+                strcpy(begin->inicio->word, word);
+                begin->inicio->prox = NULL;
+                begin->fim = begin->inicio;
+            }
+            else
+            {
+                printf("ERRO AO TENTAR ALOCAR NOK!\n");
+            }
         }
         else
         {
-            printf("NAO FOI POSSIVEL ALOCAR ESPACO PARA A PALAVRA\n");
+            aux = (NOK *) malloc(sizeof(NOK));
+            if(aux != NULL)
+            {
+                strcpy(aux->word, word);
+                aux->prox = NULL;
+                begin->fim->prox = aux;
+                begin->fim = aux;
+            }
+            else
+            {
+                printf("ERRO AO TENTAR ALOCAR NOK!\n");
+            }
         }
+        begin->tamanho++;
     }
     else
     {
@@ -58,16 +83,28 @@ void insert_keyword(KEYWORDS *begin, char *word)
     }
 }
 
+void print_keywords(KEYWORDS *k)
+{
+    NOK *aux = k->inicio;
+    while (aux != NULL)
+    {
+        printf("%s, ", aux->word);
+        aux = aux->prox;
+    }
+    printf("\n");
+}
+
 void destroy_keywords(KEYWORDS *k)
 {
-    KEYWORDS *aux = NULL;
+    NOK *aux = NULL, *aux2 = NULL;
     if(k != NULL)
     {
-        for(aux = k->prox; aux != NULL; k = aux, aux = aux->prox)
+        for(aux = k->inicio, aux2 = aux->prox; aux2 != NULL; aux = aux2, aux2 = aux2->prox)
         {
-            free(k->word);
-            free(k);
+            free(aux);
         }
+        free(aux);
+        free(k);
     }
     else
     {
