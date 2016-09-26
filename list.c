@@ -43,9 +43,18 @@ LIST *create_list()
     }
     else
     {
-        new->inicio = NULL;
-        new->fim = NULL;
-        new->tamanho = 0;
+        new->keyword = create_keywords();
+        if(new->keyword != NULL)
+        {
+            new->inicio = NULL;
+            new->fim = NULL;
+            new->tamanho = 0;
+        }
+        else
+        {
+            printf("NAO FOI POSSIVEL ALOCAR A ESTRUTURA KEYWORD\n");
+            new = NULL;
+        }
     }
 
     return new;
