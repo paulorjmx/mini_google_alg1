@@ -39,34 +39,34 @@ void insert_keyword(KEYWORDS *begin, char *word)
     NOK *aux = NULL;
     if(begin != NULL && begin->tamanho < 10)
     {
-        if(begin->inicio == NULL)
+        aux = (NOK *) malloc(sizeof(NOK));
+        if(aux != NULL)
         {
-            begin->inicio = (NOK *) malloc(sizeof(NOK));
-            if(begin->inicio != NULL)
+            aux->prox = NULL;
+            aux->word = (char *) malloc(sizeof(char) * strlen(word));
+            if(aux->word != NULL)
             {
-                strcpy(begin->inicio->word, word);
-                begin->inicio->prox = NULL;
-                begin->fim = begin->inicio;
+                strcpy(aux->word, word);
+                if(begin->inicio == NULL)
+                {
+                    begin->inicio = aux;
+                    begin->fim = begin->inicio;
+                }
+                else
+                {
+                    begin->fim->prox = aux;
+                    begin->fim = aux;
+                }
             }
             else
             {
-                printf("ERRO AO TENTAR ALOCAR NOK!\n");
+                free(aux);
+                printf("NAO FOI POSSIVEL ALOCAR ESPACO PARA WORD\n");
             }
         }
         else
         {
-            aux = (NOK *) malloc(sizeof(NOK));
-            if(aux != NULL)
-            {
-                strcpy(aux->word, word);
-                aux->prox = NULL;
-                begin->fim->prox = aux;
-                begin->fim = aux;
-            }
-            else
-            {
-                printf("ERRO AO TENTAR ALOCAR NOK!\n");
-            }
+            printf("ERRO AO TENTAR ALOCAR NOK\n");
         }
         begin->tamanho++;
     }
@@ -99,10 +99,12 @@ void destroy_keywords(KEYWORDS *k)
     NOK *aux = NULL, *aux2 = NULL;
     if(k != NULL)
     {
-        for(aux = k->inicio, aux2 = aux->prox; aux2 != NULL; aux = aux2, aux2 = aux2->prox)
+        for(aux = k->inicio, aux2 = k->inicio->prox; aux2 != NULL; aux = aux2, aux2 = aux2->prox)
         {
+            free(aux->word);
             free(aux);
         }
+        free(aux->word);
         free(aux);
         free(k);
     }
