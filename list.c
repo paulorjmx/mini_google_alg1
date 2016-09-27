@@ -130,7 +130,14 @@ void remove_site(LIST *l, unsigned int cod)
 
 unsigned int get_last_cod(LIST *l)
 {
-    return l->fim->cod;
+    if(l != NULL && l->tamanho > 0)
+    {
+        return l->fim->cod;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 void erase_list(LIST *l)
