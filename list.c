@@ -43,20 +43,10 @@ LIST *create_list()
     }
     else
     {
-        new->keyword = create_keywords();
-        if(new->keyword != NULL)
-        {
-            new->inicio = NULL;
-            new->fim = NULL;
-            new->tamanho = 0;
-        }
-        else
-        {
-            printf("NAO FOI POSSIVEL ALOCAR A ESTRUTURA KEYWORD\n");
-            new = NULL;
-        }
+        new->inicio = NULL;
+        new->fim = NULL;
+        new->tamanho = 0;
     }
-
     return new;
 }
 
@@ -153,7 +143,8 @@ void erase_list(LIST *l)
             destroy_keywords(pt_aux2->keyword);
             free(pt_aux2);
         }
-        free(pt_aux);
+        destroy_keywords(pt_aux2->keyword);
+        free(pt_aux2);
         free(l);
     }
 }
