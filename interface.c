@@ -11,26 +11,43 @@
     #define CLEAR_SCREEN() system("clear");
 #endif
 
-LIST *get_from_file(const char *file_name)
+LIST *get_from_file(char *file_name)
 {
-    char nome[50], link[100], *pchave = NULL;
+    char nome[50], link[100], *line = NULL, *pchave = NULL;
     unsigned int code = 0, relevancia = 0;
     LIST *l = create_list();
     KEYWORDS *k = create_keywords();
-    pchave = (char *) malloc(sizeof(char) * 500);
+    pchave = (char *) malloc(sizeof(char) * 50);
+    line = (char *) malloc(sizeof(char) * 1000);
+    const char *addr_line = line;
     FILE *arq = fopen(file_name, "a+");
     if(arq != NULL)
     {
         while(1)
         {
+            fscanf(arq, "%s", line);
             if(feof(arq) == 0)
             {
-                fscanf(arq, "%u %s %u %s %s", code, nome, relevancia, link, pchave);
-                printf("COD: %u\n", code);
-                printf("NOME: %s\n", code);
-                printf("RELEVANCIA: %u\n", relevancia);
-                printf("LINK: %s\n", link);
-                printf("PALAVRAS-CHAVE: %s\n", pchave);
+                sscanf(line, "%u", &code);
+                line = strchr(line, ',');
+                sscanf(++line, " %[^,]s", nome);
+                line = strchr(line, ',');
+                sscanf(++line, " %[^,]s", link);
+                line = strchr(line, ',');
+                sscanf(++line, "%u", &relevancia);
+                while(1)
+                {
+                    line = strchr(line, ',');
+                    if(line != NULL)
+                        printf("%s, \n", ++line);
+                    else
+                        break;
+                    // sscanf(++line, " %[^,]s", pchave);
+                }
+            }
+            else
+            {
+                break;
             }
             printf("\n");
         }
@@ -39,6 +56,12 @@ LIST *get_from_file(const char *file_name)
     {
         printf("NAO FOI POSSIVEL ABRIR O ARQUIVO\n");
     }
+    fclose(arq);
+    free(addr_line);
+    free(pchave);
+    free(l);
+    free(k);
+    return l;
 }
 
 void menu(LIST *l)
