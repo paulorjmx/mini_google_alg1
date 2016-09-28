@@ -143,15 +143,18 @@ unsigned int get_last_cod(LIST *l)
 void erase_list(LIST *l)
 {
     NO* pt_aux = NULL, *pt_aux2 = NULL;
-    if(l != NULL && l->tamanho > 0)
+    if(l != NULL)
     {
-        for(pt_aux = l->inicio->prox, pt_aux2 = l->inicio; pt_aux != NULL; pt_aux2 = pt_aux, pt_aux = pt_aux->prox)
+        if(l->tamanho > 0)
         {
+            for(pt_aux = l->inicio->prox, pt_aux2 = l->inicio; pt_aux != NULL; pt_aux2 = pt_aux, pt_aux = pt_aux->prox)
+            {
+                destroy_keywords(pt_aux2->keyword);
+                free(pt_aux2);
+            }
             destroy_keywords(pt_aux2->keyword);
             free(pt_aux2);
         }
-        destroy_keywords(pt_aux2->keyword);
-        free(pt_aux2);
         free(l);
     }
 }
