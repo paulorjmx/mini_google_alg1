@@ -99,13 +99,16 @@ void destroy_keywords(KEYWORDS *k)
     NOK *aux = NULL, *aux2 = NULL;
     if(k != NULL)
     {
-        for(aux = k->inicio, aux2 = k->inicio->prox; aux2 != NULL; aux = aux2, aux2 = aux2->prox)
+        if(k->tamanho > 0)
         {
+            for(aux = k->inicio, aux2 = k->inicio->prox; aux2 != NULL; aux = aux2, aux2 = aux2->prox)
+            {
+                free(aux->word);
+                free(aux);
+            }
             free(aux->word);
             free(aux);
         }
-        free(aux->word);
-        free(aux);
         free(k);
     }
     else
