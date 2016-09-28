@@ -22,7 +22,7 @@ struct list
 void write_on_file(LIST *l, const char *file_name)
 {
     NO *ptr = NULL;
-    FILE *arq = fopen(file_name, "a+");
+    FILE *arq = fopen(file_name, "w");
     if(arq != NULL)
     {
         for(ptr = l->inicio; ptr != NULL; ptr = ptr->prox)
@@ -34,6 +34,7 @@ void write_on_file(LIST *l, const char *file_name)
     {
         printf("NAO FOI POSSIVEL ABRIR O ARQUIVO: %s\n", file_name);
     }
+    fclose(arq);
 }
 
 void print_list(LIST *l)
