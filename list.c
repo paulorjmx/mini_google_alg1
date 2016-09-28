@@ -19,6 +19,23 @@ struct list
     int tamanho;
 };
 
+void write_on_file(LIST *l, const char *file_name)
+{
+    NO *ptr = NULL;
+    FILE *arq = fopen(file_name, "a+");
+    if(arq != NULL)
+    {
+        for(ptr = l->inicio; ptr != NULL; ptr = ptr->prox)
+        {
+            fprintf(arq, "%u,%s,%u,%s,%s\n", ptr->cod, ptr->nome, ptr->relevancia, ptr->link, ptr->keyword);
+        }
+    }
+    else
+    {
+        printf("NAO FOI POSSIVEL ABRIR O ARQUIVO: %s\n", file_name);
+    }
+}
+
 void print_list(LIST *l)
 {
     NO *aux = l->inicio;
