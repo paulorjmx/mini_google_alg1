@@ -9,4 +9,5 @@
         void erase_list(LIST *l);
         unsigned int get_last_cod(LIST *l);
         void print_list(LIST *l);
+        void write_on_file(LIST *l, const char *file_name);
 #endif
