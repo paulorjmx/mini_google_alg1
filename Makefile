@@ -1,14 +1,14 @@
 all: main.o list.o interface.o
-	@gcc obj/list.o obj/main.o obj/interface.o -o main
+	@gcc list.o main.o interface.o -o main
 
 main.o: main.c
-	@gcc -c main.c -o obj/main.o
+	@gcc -c main.c -o main.o
 
 list.o: list.c
-	@gcc -c list.c -o obj/list.o
+	@gcc -c list.c -o list.o
 
 interface.o: interface.c
-	@gcc -c interface.c -o obj/interface.o
+	@gcc -c interface.c -o interface.o
 
 clean:
-	rm obj/*.o
+	rm *.o
