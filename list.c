@@ -48,6 +48,7 @@ void print_list(LIST *l)
         printf("LINK: %s\n", aux->link);
         printf("KEYWORDS: %s\n", aux->keyword);
         aux = aux->prox;
+        printf("\n");
     }
 }
 
