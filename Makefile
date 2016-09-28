@@ -11,4 +11,4 @@ interface.o: interface.c
 	@gcc -c interface.c -o interface.o
 
 clean:
-	rm *.o
+	@rm *.o
