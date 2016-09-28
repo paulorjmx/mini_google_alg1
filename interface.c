@@ -78,7 +78,7 @@ void menu(LIST *l)
         {
             case '1':
                 menu_inserir(l);
-                while(print_question("Deseja inserir mais algum site? ") == 0)
+                while(print_question("Deseja inserir mais algum site?[s/N]: ") == 0)
                 {
                     menu_inserir(l);
                 }
@@ -86,7 +86,7 @@ void menu(LIST *l)
 
             case '2':
                 menu_remover(l);
-                while(print_question("Deseja remover mais algum site? ") == 0)
+                while(print_question("Deseja remover mais algum site?[s/N]: ") == 0)
                 {
                     menu_remover(l);
                 }
@@ -94,10 +94,18 @@ void menu(LIST *l)
 
             case '3':
                 menu_inserir_pchave(l);
+                while (print_question("Deseja atualizar a relevancia de mais algum site?[s/N]: ") == 0)
+                {
+                    menu_inserir_pchave(l);
+                }
                 break;
 
             case '4':
                 menu_atualizar_relevancia(l);
+                while (print_question("Deseja atualizar a relevancia de mais algum site?[s/N]: ") == 0)
+                {
+                    menu_atualizar_relevancia(l);
+                }
                 break;
 
             case '5':
