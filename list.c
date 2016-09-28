@@ -9,7 +9,7 @@ typedef struct no
     char nome[50];
     unsigned int relevancia;
     char link[100];
-    KEYWORDS *keyword;
+    char *keyword;
     struct no *prox;
 }NO;
 
@@ -28,7 +28,7 @@ void print_list(LIST *l)
         printf("NOME: %s\n", aux->nome);
         printf("RELEVANCIA: %u\n", aux->relevancia);
         printf("LINK: %s\n", aux->link);
-        print_keywords(aux->keyword);
+        printf("KEYWORDS: %s\n", aux->keyword);
         aux = aux->prox;
     }
 }
@@ -51,7 +51,7 @@ LIST *create_list()
 }
 
 
-void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevancia, char link[], KEYWORDS *palavrachave)
+void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevancia, char link[], char *palavras_chave)
 {
     NO *new = (NO *) malloc(sizeof(NO));
     if(new != NULL)
@@ -60,7 +60,8 @@ void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevan
         strcpy(new->nome, nome);
         new->relevancia = relevancia;
         strcpy(new->link, link);
-        new->keyword = palavrachave;
+        new->keyword = (char *) malloc(sizeof(char) * strlen(palavras_chave));
+        new->keyword = strcpy(new->keyword, palavras_chave);
         new->prox = NULL;
         if(l->tamanho == 0)
         {
@@ -149,10 +150,10 @@ void erase_list(LIST *l)
         {
             for(pt_aux = l->inicio->prox, pt_aux2 = l->inicio; pt_aux != NULL; pt_aux2 = pt_aux, pt_aux = pt_aux->prox)
             {
-                destroy_keywords(pt_aux2->keyword);
+                free(pt_aux2->keyword);
                 free(pt_aux2);
             }
-            destroy_keywords(pt_aux2->keyword);
+            free(pt_aux2->keyword);
             free(pt_aux2);
         }
         free(l);

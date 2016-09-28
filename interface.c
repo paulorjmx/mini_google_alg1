@@ -13,11 +13,9 @@
 
 LIST *get_from_file(char *file_name)
 {
-    char nome[50], link[100], *line = NULL, *pchave = NULL;
+    char nome[50], link[100], *line = NULL;
     unsigned int code = 0, relevancia = 0;
     LIST *l = create_list();
-    KEYWORDS *k = create_keywords();
-    pchave = (char *) malloc(sizeof(char) * 50);
     line = (char *) malloc(sizeof(char) * 1000);
     const char *addr_line = line;
     FILE *arq = fopen(file_name, "a+");
@@ -35,21 +33,14 @@ LIST *get_from_file(char *file_name)
                 sscanf(++line, " %[^,]s", link);
                 line = strchr(line, ',');
                 sscanf(++line, "%u", &relevancia);
-                while(1)
-                {
-                    line = strchr(line, ',');
-                    if(line != NULL)
-                        printf("%s, \n", ++line);
-                    else
-                        break;
-                    // sscanf(++line, " %[^,]s", pchave);
-                }
+                line = strchr(line, ',');
+                ++line;
+                insert_site(l, code, nome, relevancia, link, line);
             }
             else
             {
                 break;
             }
-            printf("\n");
         }
     }
     else
@@ -58,9 +49,6 @@ LIST *get_from_file(char *file_name)
     }
     fclose(arq);
     free(addr_line);
-    free(pchave);
-    free(l);
-    free(k);
     return l;
 }
 
@@ -122,16 +110,8 @@ void menu_inserir(LIST *l)
 {
     fflush(stdin);
     size_t nbytes = 500;
-    int i = 0, j = 0;
     unsigned int codigo = 0, relevancia = 0;
-    char nome[50], link[100], *w = NULL, *palavras = NULL;
-    KEYWORDS *pchave = NULL;
-    w = (char *) malloc(sizeof(char) * 50);
-    if(w == NULL)
-    {
-        printf("NAO FOI POSSIVEL ALOCAR ESPACO PARA A VARIAVEL AUXILIAR W\n");
-        return;
-    }
+    char nome[50], link[100], *palavras = NULL;
     palavras = (char *) malloc(sizeof(char) * nbytes);
     if(palavras == NULL)
     {
@@ -148,26 +128,8 @@ void menu_inserir(LIST *l)
     printf("\nDigite as palavras chaves separadas por virgula (max. 10): ");
     scanf("%s", palavras);
     codigo = (get_last_cod(l) + 1);
-    pchave = create_keywords();
-    while(palavras[i] != '\0')
-    {
-        if(palavras[i] == ',')
-        {
-            j = 0;
-            printf("WORD: %s\n", w);
-            insert_keyword(pchave, w);
-        }
-        else
-        {
-
-            w[j++] = palavras[i];
-        }
-        i++;
-    }
-    insert_keyword(pchave, w);
-    insert_site(l, codigo, nome, relevancia, link, pchave);
+    insert_site(l, codigo, nome, relevancia, link, palavras);
     free(palavras);
-    free(w);
 }
 
 int print_question(char *question)
