@@ -30,9 +30,9 @@ LIST *get_from_file(char *file_name)
                 line = strchr(line, ',');
                 sscanf(++line, " %[^,]s", nome);
                 line = strchr(line, ',');
-                sscanf(++line, " %[^,]s", link);
-                line = strchr(line, ',');
                 sscanf(++line, "%u", &relevancia);
+                line = strchr(line, ',');
+                sscanf(++line, " %[^,]s", link);
                 line = strchr(line, ',');
                 ++line;
                 insert_site(l, code, nome, relevancia, link, line);
@@ -86,6 +86,10 @@ void menu(LIST *l)
 
             case '2':
                 menu_remover(l);
+                while(print_question("Deseja remover mais algum site? ") == 0)
+                {
+                    menu_remover(l);
+                }
                 break;
 
             case '3':
@@ -98,6 +102,7 @@ void menu(LIST *l)
 
             case '5':
                 escolha = -1;
+                write_on_file(l, "googlebot.txt");
                 break;
 
             default:
@@ -151,7 +156,20 @@ int print_question(char *question)
 
 void menu_remover(LIST *l)
 {
-
+    unsigned int cod = 0;
+    CLEAR_SCREEN();
+    if(l != NULL)
+    {
+        print_list(l);
+        printf("\n");
+        printf("Digite o codigo do site que deseja remover: ");
+        scanf("%u", &cod);
+        remove_site(l, cod);
+    }
+    else
+    {
+        printf("Voce nao cadastrou nenhum site!\n");
+    }
 }
 
 void menu_inserir_pchave(LIST *l)
@@ -161,5 +179,19 @@ void menu_inserir_pchave(LIST *l)
 
 void menu_atualizar_relevancia(LIST *l)
 {
-
+    unsigned int cod = 0, relevancia = 0;
+    CLEAR_SCREEN();
+    if(l != NULL)
+    {
+        print_list(l);
+        printf("Digite o codigo do site que deseja remover: ");
+        scanf("%u", &cod);
+        printf("\nDigite o novo valor que a relevancia do site tera: ");
+        scanf("%u", &relevancia);
+        update_relevance(l, relevancia, cod);
+    }
+    else
+    {
+        printf("Voce nao cadastrou nenhum site!\n");
+    }
 }
