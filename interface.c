@@ -184,24 +184,22 @@ void menu_remover(LIST *l)
 
 void menu_inserir_pchave(LIST *l)
 {
-
+    unsigned int cod = 0;
+    CLEAR_SCREEN();
+    print_list(l);
+    printf("Digite o codigo do site que deseja adicionar mais palavras-chave: ");
+    scanf("%u", &cod);
+    printf("\nDigite as palavras-chave que deseja inserir: ");
 }
 
 void menu_atualizar_relevancia(LIST *l)
 {
     unsigned int cod = 0, relevancia = 0;
     CLEAR_SCREEN();
-    if(l != NULL)
-    {
-        print_list(l);
-        printf("Digite o codigo do site que deseja remover: ");
-        scanf("%u", &cod);
-        printf("\nDigite o novo valor que a relevancia do site tera: ");
-        scanf("%u", &relevancia);
-        update_relevance(l, relevancia, cod);
-    }
-    else
-    {
-        printf("Voce nao cadastrou nenhum site!\n");
-    }
+    print_list(l);
+    printf("Digite o codigo do site que deseja remover: ");
+    scanf("%u", &cod);
+    printf("\nDigite o novo valor que a relevancia do site tera: ");
+    scanf("%u", &relevancia);
+    update_relevance(l, relevancia, cod);
 }
