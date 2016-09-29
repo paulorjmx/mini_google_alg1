@@ -182,7 +182,7 @@ void menu_remover(LIST *l)
 
 void menu_inserir_pchave(LIST *l)
 {
-
+    
 }
 
 void menu_atualizar_relevancia(LIST *l)
