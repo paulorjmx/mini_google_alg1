@@ -96,7 +96,7 @@ void menu(LIST *l)
 
             case '3':
                 menu_inserir_pchave(l);
-                while (print_question("Deseja atualizar a relevancia de mais algum site?[s/N]: ") == 0)
+                while (print_question("Deseja inserir palavras-chave em mais algum site?[s/N]: ") == 0)
                 {
                     menu_inserir_pchave(l);
                 }
@@ -184,12 +184,33 @@ void menu_remover(LIST *l)
 
 void menu_inserir_pchave(LIST *l)
 {
-    unsigned int cod = 0;
-    CLEAR_SCREEN();
-    print_list(l);
-    printf("Digite o codigo do site que deseja adicionar mais palavras-chave: ");
-    scanf("%u", &cod);
-    printf("\nDigite as palavras-chave que deseja inserir: ");
+    char *w = NULL;
+    unsigned int cod = 0, nw = 0, nword = 0;
+    w = (char *) malloc(sizeof(char) * 300);
+    if(w != NULL)
+    {
+        CLEAR_SCREEN();
+        print_list(l);
+        printf("Digite o codigo do site que deseja adicionar mais palavras-chave: ");
+        scanf("%u", &cod);
+        nw = nwords(l, cod);
+        printf("\nDigite as palavras-chave, separadas por virgula, que deseja inserir(max. %d): ", (10 - nw));
+        scanf("%s", w);
+        nword = count_words(w);
+        if(nword > (10 - nw))
+        {
+            printf("A QUANTIDADE DE PALAVRAS-CHAVE NAO PODE ULTRAPASSAR 10!\n");
+        }
+        else
+        {
+            update_pchave(l, cod, w);
+        }
+    }
+    else
+    {
+        printf("NAO FOI POSSIVEL ALOCAR MEMORIA PARA AS PALAVRAS-CHAVE!\n");
+    }
+    free(w);
 }
 
 void menu_atualizar_relevancia(LIST *l)
@@ -197,7 +218,7 @@ void menu_atualizar_relevancia(LIST *l)
     unsigned int cod = 0, relevancia = 0;
     CLEAR_SCREEN();
     print_list(l);
-    printf("Digite o codigo do site que deseja remover: ");
+    printf("Digite o codigo do site que deseja atualizar a relevancia: ");
     scanf("%u", &cod);
     printf("\nDigite o novo valor que a relevancia do site tera: ");
     scanf("%u", &relevancia);
