@@ -3,6 +3,8 @@
 #include <string.h>
 #include "inc/interface.h"
 
+int print_question(char *question);
+
 #ifdef _WIN32
     #define CLEAR_SCREEN() system("cls");
 #endif
@@ -182,7 +184,7 @@ void menu_remover(LIST *l)
 
 void menu_inserir_pchave(LIST *l)
 {
-    
+
 }
 
 void menu_atualizar_relevancia(LIST *l)
