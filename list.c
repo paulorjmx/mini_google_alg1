@@ -71,9 +71,13 @@ LIST *create_list()
         new->inicio = NULL;
         new->fim = NULL;
         new->tamanho = 0;
-        new->size_keywords = 0;
     }
     return new;
+}
+
+void insert_keyword(LIST *l, unsigned int code, char *words)
+{
+
 }
 
 void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevancia, char link[], char *palavras_chave)
@@ -210,4 +214,16 @@ unsigned int count_words(const char *words)
         }
     }
     return counter;
+}
+
+unsigned int nwords(LIST *l)
+{
+    if(l != NULL && l->tamanho > 0)
+    {
+        return l->size_keywords;
+    }
+    else
+    {
+        printf("A LISTA NAO EXISTE OU ESTA VAZIA!\n");
+    }
 }
