@@ -213,12 +213,13 @@ void update_pchave(LIST *l, unsigned int code, char *palavras_chave)
         for(ptr =  l->inicio; ptr->cod != code && ptr != NULL; ptr = ptr->prox) { }
         if(ptr != NULL)
         {
+            ptr->keyword = (char *) realloc(ptr->keyword, sizeof(ptr->keyword) + (sizeof(char) * strlen(palavras_chave)));
             if(ptr->size_keywords != 0)
             {
                 strcat(ptr->keyword, ",");
             }
             strcat(ptr->keyword, palavras_chave);
-            ptr->size_keywords = count_words(ptr->keyword);
+            ptr->size_keywords += count_words(palavras_chave);
         }
         else
         {
