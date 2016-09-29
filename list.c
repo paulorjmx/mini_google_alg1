@@ -3,6 +3,8 @@
 #include <string.h>
 #include "inc/list.h"
 
+unsigned int count_words(const char *words);
+
 typedef struct no
 {
     unsigned int cod;
@@ -10,6 +12,7 @@ typedef struct no
     unsigned int relevancia;
     char link[100];
     char *keyword;
+    unsigned int size_keywords;
     struct no *prox;
 }NO;
 
@@ -65,10 +68,10 @@ LIST *create_list()
         new->inicio = NULL;
         new->fim = NULL;
         new->tamanho = 0;
+        new->size_keywords = 0;
     }
     return new;
 }
-
 
 void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevancia, char link[], char *palavras_chave)
 {
@@ -81,6 +84,7 @@ void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevan
         strcpy(new->link, link);
         new->keyword = (char *) malloc(sizeof(char) * strlen(palavras_chave));
         new->keyword = strcpy(new->keyword, palavras_chave);
+        new->size_keywords = count_words(palavras_chave);
         new->prox = NULL;
         if(l->tamanho == 0)
         {
@@ -177,4 +181,24 @@ void erase_list(LIST *l)
         }
         free(l);
     }
+}
+
+unsigned int count_words(const char *words)
+{
+    char *aux = words;
+    unsigned int counter = 0;
+    while(1)
+    {
+        if(strchr(aux, ',') != NULL)
+        {
+            counter++;
+            aux++;
+        }
+        else
+        {
+            counter++;
+            break;
+        }
+    }
+    return counter;
 }
