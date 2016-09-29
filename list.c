@@ -3,8 +3,6 @@
 #include <string.h>
 #include "inc/list.h"
 
-unsigned int count_words(const char *words);
-
 typedef struct no
 {
     unsigned int cod;
@@ -73,11 +71,6 @@ LIST *create_list()
         new->tamanho = 0;
     }
     return new;
-}
-
-void insert_keyword(LIST *l, unsigned int code, char *words)
-{
-
 }
 
 void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevancia, char link[], char *palavras_chave)
@@ -198,29 +191,56 @@ void erase_list(LIST *l)
 
 unsigned int count_words(const char *words)
 {
-    char *aux = words;
+    char *aux = (char *) words;
     unsigned int counter = 0;
-    while(1)
+    if(words != NULL)
     {
-        if(strchr(aux, ',') != NULL)
+        while((aux = strchr(aux, ',')) != NULL)
         {
             counter++;
             aux++;
         }
-        else
-        {
-            counter++;
-            break;
-        }
+        counter++;
     }
     return counter;
 }
 
-unsigned int nwords(LIST *l)
+void update_pchave(LIST *l, unsigned int code, char *palavras_chave)
 {
+    NO *ptr = NULL;
     if(l != NULL && l->tamanho > 0)
     {
-        return l->size_keywords;
+        for(ptr =  l->inicio; ptr->cod != code && ptr != NULL; ptr = ptr->prox) { }
+        if(ptr != NULL)
+        {
+            if(ptr->size_keywords != 0)
+            {
+                strcat(ptr->keyword, ",");
+            }
+            strcat(ptr->keyword, palavras_chave);
+            ptr->size_keywords = count_words(ptr->keyword);
+        }
+        else
+        {
+            printf("O SITE NAO ESTA CADASTRADO\n");
+        }
+    }
+    else
+    {
+        printf("A LISTA ESTA VAZIA OU NAO FOI CRIADA!\n");
+    }
+}
+
+unsigned int nwords(LIST *l, unsigned int code)
+{
+    NO *ptr = NULL;
+    if(l != NULL && l->tamanho > 0)
+    {
+        for(ptr =  l->inicio; ptr->cod != code && ptr != NULL; ptr = ptr->prox) { }
+        if(ptr != NULL)
+            return ptr->size_keywords;
+        else
+            return 0;
     }
     else
     {
