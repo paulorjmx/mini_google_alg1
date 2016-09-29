@@ -43,15 +43,18 @@ void write_on_file(LIST *l, const char *file_name)
 void print_list(LIST *l)
 {
     NO *aux = l->inicio;
-    while(aux != NULL)
+    if(l != NULL && l->tamanho > 0)
     {
-        printf("CODIGO: %u\n", aux->cod);
-        printf("NOME: %s\n", aux->nome);
-        printf("RELEVANCIA: %u\n", aux->relevancia);
-        printf("LINK: %s\n", aux->link);
-        printf("KEYWORDS: %s\n", aux->keyword);
-        aux = aux->prox;
-        printf("\n");
+        while(aux != NULL)
+        {
+            printf("CODIGO: %u\n", aux->cod);
+            printf("NOME: %s\n", aux->nome);
+            printf("RELEVANCIA: %u\n", aux->relevancia);
+            printf("LINK: %s\n", aux->link);
+            printf("KEYWORDS: %s\n", aux->keyword);
+            aux = aux->prox;
+            printf("\n");
+        }
     }
 }
 
@@ -75,33 +78,40 @@ LIST *create_list()
 
 void insert_site(LIST *l, unsigned int codigo, char nome[], unsigned int relevancia, char link[], char *palavras_chave)
 {
-    NO *new = (NO *) malloc(sizeof(NO));
-    if(new != NULL)
+    if(l != NULL)
     {
-        new->cod = codigo;
-        strcpy(new->nome, nome);
-        new->relevancia = relevancia;
-        strcpy(new->link, link);
-        new->keyword = (char *) malloc(sizeof(char) * strlen(palavras_chave));
-        new->keyword = strcpy(new->keyword, palavras_chave);
-        new->size_keywords = count_words(palavras_chave);
-        new->prox = NULL;
-        if(l->tamanho == 0)
+        NO *new = (NO *) malloc(sizeof(NO));
+        if(new != NULL)
         {
-            l->inicio = new;
-            l->fim = l->inicio;
+            new->cod = codigo;
+            strcpy(new->nome, nome);
+            new->relevancia = relevancia;
+            strcpy(new->link, link);
+            new->keyword = (char *) malloc(sizeof(char) * strlen(palavras_chave));
+            new->keyword = strcpy(new->keyword, palavras_chave);
+            new->size_keywords = count_words(palavras_chave);
+            new->prox = NULL;
+            if(l->tamanho == 0)
+            {
+                l->inicio = new;
+                l->fim = l->inicio;
+            }
+            else
+            {
+                l->fim->prox = new;
+                l->fim = new;
+            }
+            l->tamanho++;
         }
         else
         {
-            l->fim->prox = new;
-            l->fim = new;
+            printf("NAO FOI POSSIVEL ALOCAR O NO\n");
+            new = NULL;
         }
-        l->tamanho++;
     }
     else
     {
-        printf("NAO FOI POSSIVEL ALOCAR O NO\n");
-        new = NULL;
+        printf("A ESTRUTURA LISTA NAO FOI CRIADA!\n");
     }
 }
 
@@ -150,7 +160,6 @@ void remove_site(LIST *l, unsigned int cod)
         }
     }
 }
-
 
 unsigned int get_last_cod(LIST *l)
 {
