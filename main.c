@@ -4,9 +4,6 @@
 
 int main(int argc, char *argv[])
 {
-    LIST *l = NULL;
-    l = get_from_file("googlebot.txt");
-    menu(l);
-    erase_list(l);
+    menu();
     return 0;
 }
