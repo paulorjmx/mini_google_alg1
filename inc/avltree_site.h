@@ -1,5 +1,7 @@
 #ifndef AVL_SITE_H
     #define AVL_SITE_H
+        #include "site.h"
+        #include "avltree_keywords.h"
 
         typedef struct avl_site AVL_SITE;
 
