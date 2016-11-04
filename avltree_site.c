@@ -1,5 +1,4 @@
 #include "inc/avltree_site.h"
-#include "inc/avltree_keywords.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -51,22 +50,22 @@ void avlsite_insert_node(AVL_SITE **root, SITE *s, KEYWORDS *k)
     {
         if((*root)->left != NULL)
         {
-            avlsite_insert_node(&(*root)->left, val);
+            avlsite_insert_node(&(*root)->left, s, k);
         }
         else
         {
-            (*root)->left = avlsite_create(val);
+            (*root)->left = avlsite_create(s, k);
         }
     }
     else
     {
         if((*root)->right != NULL)
         {
-            avlsite_insert_node(&(*root)->right, val);
+            avlsite_insert_node(&(*root)->right, s, k);
         }
         else
         {
-            (*root)->right = avlsite_create(val);
+            (*root)->right = avlsite_create(s, k);
         }
     }
 
@@ -85,7 +84,7 @@ void avlsite_insert_node(AVL_SITE **root, SITE *s, KEYWORDS *k)
     }
     else if(fb == -2)
     {
-        if(site_get_code(s) < site_get_code((*root)->right->s))
+        if(site_get_code(s) > site_get_code((*root)->right->s))
         {
             avlsite_rotate_left(root);
         }
@@ -130,7 +129,7 @@ int avlsite_remove_node(AVL_SITE **root, unsigned int code)
                 else
                 {
                     (*root)->s = avlsite_search_smaller_right((*root)->right);
-                    avlsite_remove_node(&(*root)->right, (*root)->s);
+                    avlsite_remove_node(&(*root)->right, site_get_code((*root)->s));
                 }
             }
             int fb = (avlsite_height((*root)->left) - avlsite_height((*root)->right));
@@ -169,7 +168,7 @@ SITE *avlsite_search(AVL_SITE *root, unsigned int code)
 {
     if(root == NULL)
     {
-        return -1;
+        return NULL;
     }
     else
     {
@@ -179,13 +178,13 @@ SITE *avlsite_search(AVL_SITE *root, unsigned int code)
         }
         else
         {
-            if(site_get_code(s) > code)
+            if(code < site_get_code(root->s))
             {
-                avlsite_search(root->right, code);
+                avlsite_search(root->left, code);
             }
             else
             {
-                avlsite_search(root->left, code);
+                avlsite_search(root->right, code);
             }
 
         }
@@ -224,10 +223,12 @@ void avlsite_rotate_left(AVL_SITE **root)
 
 void avlsite_free(AVL_SITE **root)
 {
-    if(root != NULL)
+    if((*root) != NULL)
     {
-        avlsite_free(root->left);
-        avlsite_free(root->right);
+        avlsite_free(&(*root)->left);
+        avlsite_free(&(*root)->right);
+        site_free(&(*root)->s);
+        avlkeywords_free(&(*root)->k_root);
         free((*root));
         (*root) = NULL;
     }
@@ -242,7 +243,10 @@ void avlsite_inorder(AVL_SITE *root)
     if(root != NULL)
     {
         avlsite_inorder(root->left);
-        printf("%d\n", root->n);
+        site_to_string(root->s);
+        printf("KEYWORDS: ");
+        avlkeywords_inorder(root->k_root);
+        printf("\n\n");
         avlsite_inorder(root->right);
     }
     else
