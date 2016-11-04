@@ -1,11 +1,13 @@
 #ifndef INTERFACE_H
     #define INTERFACE_H
-        #include "list.h"
+        #include "avltree_site.h"
+        #include "avltree_keywords.h"
+        #include "site.h"
 
-        void menu(LIST *l);
-        void menu_inserir(LIST *l);
-        void menu_remover(LIST *l);
-        void menu_inserir_pchave(LIST *l);
-        void menu_atualizar_relevancia(LIST *l);
-        LIST *get_from_file(char *file_name);
+        void menu();
+        // void menu_inserir();
+        // void menu_remover();
+        // void menu_inserir_pchave();
+        // void menu_atualizar_relevancia();
+        AVL_SITE *get_from_file(char *file_name);
 #endif
