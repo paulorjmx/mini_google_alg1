@@ -45,7 +45,7 @@ KEYWORDS *avlkeywords_create(char *keyword)
 
 void avlkeywords_insert_node(KEYWORDS **root, char *keyword)
 {
-    if(strcmp(keyword,(*root)->keyword) < 0)
+    if(strcmp(keyword, (*root)->keyword) < 0)
     {
         if((*root)->left != NULL)
         {
@@ -222,10 +222,10 @@ void avlkeywords_rotate_left(KEYWORDS **root)
 
 void avlkeywords_free(KEYWORDS **root)
 {
-    if(root != NULL)
+    if((*root) != NULL)
     {
-        avlkeywords_free(root->left);
-        avlkeywords_free(root->right);
+        avlkeywords_free(&(*root)->left);
+        avlkeywords_free(&(*root)->right);
         free((*root));
         (*root) = NULL;
     }
@@ -240,7 +240,7 @@ void avlkeywords_inorder(KEYWORDS *root)
     if(root != NULL)
     {
         avlkeywords_inorder(root->left);
-        printf("%s\n", root->keyword);
+        printf("%s, ", root->keyword);
         avlkeywords_inorder(root->right);
     }
     else
