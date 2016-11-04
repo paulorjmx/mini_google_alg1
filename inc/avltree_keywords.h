@@ -3,7 +3,7 @@
 
         typedef struct avl_keywords KEYWORDS;
 
-        KEYWORDS *KEYWORDS_create(char *keyword);
+        KEYWORDS *avlkeywords_create(char *keyword);
         void avlkeywords_insert_node(KEYWORDS **root, char *keyword);
         int avlkeywords_remove_node(KEYWORDS **root, char *keyword);
         char *avlkeywords_search(KEYWORDS *root, char *keyword);
