@@ -1,12 +1,12 @@
 #ifndef AVL_SITE_H
     #define AVL_SITE_H
         #include "site.h"
-        #include "avltree_keywords.h"
+        // #include "avltree_keywords.h"
 
         typedef struct avl_site AVL_SITE;
 
-        AVL_SITE *avlsite_create(SITE *s, KEYWORDS *k);
-        void avlsite_insert_node(AVL_SITE **root, SITE *s, KEYWORDS *k);
+        AVL_SITE *avlsite_create(SITE *s);
+        void avlsite_insert_node(AVL_SITE **root, SITE *s);
         int avlsite_remove_node(AVL_SITE **root, unsigned int code);
         SITE *avlsite_search(AVL_SITE *root, unsigned int code);
         SITE *avlsite_search_smaller_right(AVL_SITE *root);
