@@ -108,8 +108,7 @@ int avlsite_remove_node(AVL_SITE **root, unsigned int code)
         {
             if((*root)->left == NULL && (*root)->right == NULL)
             {
-                free((*root));
-                (*root) = NULL;
+                avlsite_free(root);
                 return 0;
             }
             else
@@ -117,14 +116,12 @@ int avlsite_remove_node(AVL_SITE **root, unsigned int code)
                 if((*root)->left == NULL)
                 {
                     (*root)->s = (*root)->right->s;
-                    free((*root)->right);
-                    (*root)->right = NULL;
+                    avlsite_free(&(*root)->right);
                 }
                 else if((*root)->right == NULL)
                 {
                     (*root)->s = (*root)->left->s;
-                    free((*root)->left);
-                    (*root)->left = NULL;
+                    avlsite_free(&(*root)->left);
                 }
                 else
                 {
