@@ -5,7 +5,6 @@
 struct avl_site
 {
     SITE *s;
-    KEYWORDS *k_root;
     struct avl_site *left, *right;
 };
 
@@ -27,7 +26,7 @@ int avlsite_height(AVL_SITE *root)
     }
 }
 
-AVL_SITE *avlsite_create(SITE *s, KEYWORDS *k)
+AVL_SITE *avlsite_create(SITE *s)
 {
     AVL_SITE *new = (AVL_SITE *) malloc(sizeof(AVL_SITE));
     if(new != NULL)
@@ -35,7 +34,6 @@ AVL_SITE *avlsite_create(SITE *s, KEYWORDS *k)
         new->left = NULL;
         new->right = NULL;
         new->s = s;
-        new->k_root = k;
         return new;
     }
     else
@@ -44,28 +42,28 @@ AVL_SITE *avlsite_create(SITE *s, KEYWORDS *k)
     }
 }
 
-void avlsite_insert_node(AVL_SITE **root, SITE *s, KEYWORDS *k)
+void avlsite_insert_node(AVL_SITE **root, SITE *s)
 {
     if(site_get_code(s) < site_get_code((*root)->s))
     {
         if((*root)->left != NULL)
         {
-            avlsite_insert_node(&(*root)->left, s, k);
+            avlsite_insert_node(&(*root)->left, s);
         }
         else
         {
-            (*root)->left = avlsite_create(s, k);
+            (*root)->left = avlsite_create(s);
         }
     }
     else
     {
         if((*root)->right != NULL)
         {
-            avlsite_insert_node(&(*root)->right, s, k);
+            avlsite_insert_node(&(*root)->right, s);
         }
         else
         {
-            (*root)->right = avlsite_create(s, k);
+            (*root)->right = avlsite_create(s);
         }
     }
 
@@ -218,6 +216,11 @@ void avlsite_rotate_left(AVL_SITE **root)
     (*root) = b;
 }
 
+unsigned int avlsite_num_keywords(AVL_SITE *root)
+{
+    return site_get_nkeywords(root->s);
+}
+
 void avlsite_free(AVL_SITE **root)
 {
     if((*root) != NULL)
@@ -225,7 +228,6 @@ void avlsite_free(AVL_SITE **root)
         avlsite_free(&(*root)->left);
         avlsite_free(&(*root)->right);
         site_free(&(*root)->s);
-        avlkeywords_free(&(*root)->k_root);
         free((*root));
         (*root) = NULL;
     }
@@ -241,8 +243,6 @@ void avlsite_inorder(AVL_SITE *root)
     {
         avlsite_inorder(root->left);
         site_to_string(root->s);
-        printf("KEYWORDS: ");
-        avlkeywords_inorder(root->k_root);
         printf("\n\n");
         avlsite_inorder(root->right);
     }
