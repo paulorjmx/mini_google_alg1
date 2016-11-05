@@ -47,6 +47,11 @@ void site_free(SITE **s)
     *s = NULL;
 }
 
+KEYWORDS *site_get_keywords(SITE *s)
+{
+    return s->k_root;
+}
+
 void site_to_string(SITE *s)
 {
     printf("CODIGO %u\n", s->codigo);
