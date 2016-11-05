@@ -19,7 +19,7 @@ AVL_SITE *get_from_file(char *file_name)
     KEYWORDS *avlkeywords_tmp = NULL;
     SITE *s = NULL;
     char nome[50], link[100], keyword[50], *line = NULL;
-    unsigned int code = 0, relevancia = 0;
+    unsigned int code = 0, relevancia = 0, num_keywords = 0;
     line = (char *) malloc(sizeof(char) * 1000);
     char *addr_line = line;
     FILE *arq = fopen(file_name, "a+");
@@ -36,19 +36,21 @@ AVL_SITE *get_from_file(char *file_name)
         line = strchr(line, ',');
         sscanf(++line, " %[^,]s", keyword);
         avlkeywords_tmp = avlkeywords_create(keyword);
+        num_keywords += 1;
         line = strchr(line, ',');
         while(line != NULL)
         {
             sscanf(++line, " %[^,]s", keyword);
             avlkeywords_insert_node(&avlkeywords_tmp, keyword);
+            num_keywords += 1;
             line = strchr(line, ',');
         }
-        s = site_create(code, nome, relevancia, link);
-        avlsite_tmp = avlsite_create(s, avlkeywords_tmp);
+        s = site_create(code, nome, relevancia, link, avlkeywords_tmp, num_keywords);
+        avlsite_tmp = avlsite_create(s);
 
-        line = addr_line;
         while(1)
         {
+            line = addr_line;
             fscanf(arq, "%s", line);
             if(feof(arq))
             {
@@ -56,6 +58,7 @@ AVL_SITE *get_from_file(char *file_name)
             }
             else
             {
+                num_keywords = 0;
                 sscanf(line, "%u", &code);
                 line = strchr(line, ',');
                 sscanf(++line, " %[^,]s", nome);
@@ -66,11 +69,21 @@ AVL_SITE *get_from_file(char *file_name)
                 line = strchr(line, ',');
                 sscanf(++line, " %[^,]s", keyword);
                 avlkeywords_tmp = avlkeywords_create(keyword);
-                s = site_create(code, nome, relevancia, link);
-                avlsite_insert_node(&avlsite_tmp, s, avlkeywords_tmp);
+                num_keywords += 1;
+                line = strchr(line, ',');
+                while(line != NULL)
+                {
+                    sscanf(++line, " %[^,]s", keyword);
+                    avlkeywords_insert_node(&avlkeywords_tmp, keyword);
+                    num_keywords += 1;
+                    line = strchr(line, ',');
+                }
+                s = site_create(code, nome, relevancia, link, avlkeywords_tmp, num_keywords);
+                avlsite_insert_node(&avlsite_tmp, s);
             }
         }
 
+        num_keywords = 0;
         sscanf(line, "%u", &code);
         line = strchr(line, ',');
         sscanf(++line, " %[^,]s", nome);
@@ -81,8 +94,17 @@ AVL_SITE *get_from_file(char *file_name)
         line = strchr(line, ',');
         sscanf(++line, " %[^,]s", keyword);
         avlkeywords_tmp = avlkeywords_create(keyword);
-        s = site_create(code, nome, relevancia, link);
-        avlsite_insert_node(&avlsite_tmp, s, avlkeywords_tmp);
+        num_keywords += 1;
+        line = strchr(line, ',');
+        while(line != NULL)
+        {
+            sscanf(++line, " %[^,]s", keyword);
+            avlkeywords_insert_node(&avlkeywords_tmp, keyword);
+            num_keywords += 1;
+            line = strchr(line, ',');
+        }
+        s = site_create(code, nome, relevancia, link, avlkeywords_tmp, num_keywords);
+        avlsite_insert_node(&avlsite_tmp, s);
     }
     else
     {
@@ -96,173 +118,253 @@ AVL_SITE *get_from_file(char *file_name)
 void menu()
 {
     AVL_SITE *root = get_from_file("googlebot.txt");
-    avlsite_inorder(root);
-    // char escolha;
-    // while(escolha != -1)
-    // {
-    //     CLEAR_SCREEN();
-    //     printf("####################################################\n");
-    //     printf("####################################################\n");
-    //     printf("# \t\t\t\t\t\t   #");
-    //     printf("\n#\t\tEscolha uma opcao \t\t   #\n# \t\t\t\t\t\t   #\n");
-    //     printf("####################################################\n");
-    //     printf("####################################################\n");
-    //
-    //     printf("\n\t\t[1] Inserir Site");
-    //     printf("\n\t\t[2] Remover Site");
-    //     printf("\n\t\t[3] Inserir Palavra-chave");
-    //     printf("\n\t\t[4] Atualizar Relevancia");
-    //     printf("\n\t\t[5] Sair");
-    //     printf("\n\t\t-> ");
-    //
-    //     scanf(" %c", &escolha);
-    //
-    //     switch(escolha)
-    //     {
-    //         case '1':
-    //             menu_inserir(l);
-    //             while(print_question("Deseja inserir mais algum site?[s/N]: ") == 0)
-    //             {
-    //                 menu_inserir(l);
-    //             }
-    //             break;
-    //
-    //         case '2':
-    //             menu_remover(l);
-    //             while(print_question("Deseja remover mais algum site?[s/N]: ") == 0)
-    //             {
-    //                 menu_remover(l);
-    //             }
-    //             break;
-    //
-    //         case '3':
-    //             menu_inserir_pchave(l);
-    //             while (print_question("Deseja inserir palavras-chave em mais algum site?[s/N]: ") == 0)
-    //             {
-    //                 menu_inserir_pchave(l);
-    //             }
-    //             break;
-    //
-    //         case '4':
-    //             menu_atualizar_relevancia(l);
-    //             while (print_question("Deseja atualizar a relevancia de mais algum site?[s/N]: ") == 0)
-    //             {
-    //                 menu_atualizar_relevancia(l);
-    //             }
-    //             break;
-    //
-    //         case '5':
-    //             escolha = -1;
-    //             avlsite_free(&root);
-    //             // write_on_file(l, "googlebot.txt");
-    //             break;
-    //
-    //         default:
-    //             break;
-    //     }
-    // }
+    char escolha;
+    while(escolha != -1)
+    {
+        CLEAR_SCREEN();
+        printf("####################################################\n");
+        printf("####################################################\n");
+        printf("# \t\t\t\t\t\t   #");
+        printf("\n#\t\tEscolha uma opcao \t\t   #\n# \t\t\t\t\t\t   #\n");
+        printf("####################################################\n");
+        printf("####################################################\n");
+
+        printf("\n\t\t[1] Inserir Site");
+        printf("\n\t\t[2] Remover Site");
+        printf("\n\t\t[3] Inserir Palavra-chave");
+        printf("\n\t\t[4] Atualizar Relevancia");
+        printf("\n\t\t[5] Sair");
+        printf("\n\t\t-> ");
+
+        scanf(" %c", &escolha);
+
+        switch(escolha)
+        {
+            case '1':
+                menu_inserir(root);
+                while(print_question("Deseja inserir mais algum site?[s/N]: ") == 0)
+                {
+                    menu_inserir(root);
+                }
+                break;
+
+            case '2':
+                menu_remover(root);
+                while(print_question("Deseja remover mais algum site?[s/N]: ") == 0)
+                {
+                    menu_remover(root);
+                }
+                break;
+
+            case '3':
+                menu_inserir_pchave(root);
+                while (print_question("Deseja inserir palavras-chave em mais algum site?[s/N]: ") == 0)
+                {
+                    menu_inserir_pchave(root);
+                }
+                break;
+
+            case '4':
+                menu_atualizar_relevancia(root);
+                while (print_question("Deseja atualizar a relevancia de mais algum site?[s/N]: ") == 0)
+                {
+                    menu_atualizar_relevancia(root);
+                }
+                break;
+
+            case '5':
+                escolha = -1;
+                avlsite_free(&root);
+                // write_on_file(l, "googlebot.txt");
+                break;
+
+            default:
+                break;
+        }
+    }
 }
 
-// void menu_inserir()
-// {
-//     fflush(stdin);
-//     size_t nbytes = 500;
-//     unsigned int codigo = 0, relevancia = 0;
-//     char nome[50], link[100], *palavras = NULL;
-//     palavras = (char *) malloc(sizeof(char) * nbytes);
-//     if(palavras == NULL)
-//     {
-//         printf("NAO FOI POSSIVEL ALOCAR ESPACO PARA AS PALAVRAS CHAVE\n");
-//         return;
-//     }
-//     CLEAR_SCREEN();
-//     printf("Digite o nome do site: ");
-//     scanf(" %[^\n]s", nome);
-//     printf("\nDigite o link para o site: ");
-//     scanf("%s", link);
-//     printf("\nDigite a relevancia que o site tera: ");
-//     scanf("%u", &relevancia);
-//     printf("\nDigite as palavras chaves separadas por virgula (max. 10): ");
-//     scanf("%s", palavras);
-//     codigo = (get_last_cod(l) + 1);
-//     insert_site(l, codigo, nome, relevancia, link, palavras);
-//     free(palavras);
-// }
-//
-// int print_question(char *question)
-// {
-//     char escolha;
-//     int answer;
-//     printf("\n%s", question);
-//     scanf(" %c", &escolha);
-//     if(escolha == 's' || escolha == 'S')
-//     {
-//         answer = 0;
-//     }
-//     else
-//     {
-//         answer = 1;
-//     }
-//     return answer;
-// }
-//
-// void menu_remover()
-// {
-//     unsigned int cod = 0;
-//     CLEAR_SCREEN();
-//     if(l != NULL)
-//     {
-//         print_list(l);
-//         printf("\n");
-//         printf("Digite o codigo do site que deseja remover: ");
-//         scanf("%u", &cod);
-//         remove_site(l, cod);
-//     }
-//     else
-//     {
-//         printf("Voce nao cadastrou nenhum site!\n");
-//     }
-// }
-//
-// void menu_inserir_pchave()
-// {
-//     char *w = NULL;
-//     unsigned int cod = 0, nw = 0, nword = 0;
-//     w = (char *) malloc(sizeof(char) * 300);
-//     if(w != NULL)
-//     {
-//         CLEAR_SCREEN();
-//         print_list(l);
-//         printf("Digite o codigo do site que deseja adicionar mais palavras-chave: ");
-//         scanf("%u", &cod);
-//         nw = nwords(l, cod);
-//         printf("\nDigite as palavras-chave, separadas por virgula, que deseja inserir(max. %d): ", (10 - nw));
-//         scanf("%s", w);
-//         nword = count_words(w);
-//         if(nword > (10 - nw))
-//         {
-//             printf("A QUANTIDADE DE PALAVRAS-CHAVE NAO PODE ULTRAPASSAR 10!\n");
-//         }
-//         else
-//         {
-//             update_pchave(l, cod, w);
-//         }
-//     }
-//     else
-//     {
-//         printf("NAO FOI POSSIVEL ALOCAR MEMORIA PARA AS PALAVRAS-CHAVE!\n");
-//     }
-//     free(w);
-// }
-//
-// void menu_atualizar_relevancia()
-// {
-//     unsigned int cod = 0, relevancia = 0;
-//     CLEAR_SCREEN();
-//     print_list(l);
-//     printf("Digite o codigo do site que deseja atualizar a relevancia: ");
-//     scanf("%u", &cod);
-//     printf("\nDigite o novo valor que a relevancia do site tera: ");
-//     scanf("%u", &relevancia);
-//     update_relevance(l, relevancia, cod);
-// }
+void menu_inserir(AVL_SITE *root)
+{
+    SITE *new_s = NULL;
+    KEYWORDS *new_k = NULL;
+    fflush(stdin);
+    size_t nbytes = 500;
+    unsigned int codigo = 0, relevancia = 0, num_keywords = 0;
+    char nome[50], link[100], tmp_palavras[50], *palavras = NULL, *addr_palavras = NULL;
+    palavras = (char *) malloc(sizeof(char) * nbytes);
+    addr_palavras = palavras;
+    if(palavras == NULL)
+    {
+        printf("NAO FOI POSSIVEL ALOCAR ESPACO PARA AS PALAVRAS CHAVE\n");
+        return;
+    }
+    CLEAR_SCREEN();
+    printf("####################################################\n");
+    printf("####################################################\n");
+    printf("# \t\t\t\t\t\t   #");
+    printf("\n#\t\tInserir novo site \t\t   #\n# \t\t\t\t\t\t   #\n");
+    printf("####################################################\n");
+    printf("####################################################\n");
+    printf("\nDigite o codigo do site: ");
+    scanf("%u", &codigo);
+    printf("\nDigite o nome do site: ");
+    scanf(" %50[^\n]s", nome);
+    printf("\nDigite o link para o site: ");
+    scanf("%100s", link);
+    printf("\nDigite a relevancia que o site tera: ");
+    scanf("%u", &relevancia);
+    printf("\nDigite as palavras chaves separadas por virgula (max. 10): ");
+    scanf("%s", palavras);
+    sscanf(palavras, " %50[^,]s", tmp_palavras);
+    new_k = avlkeywords_create(tmp_palavras);
+    num_keywords += 1;
+    palavras = strchr(palavras, ',');
+    while(palavras != NULL && num_keywords <= 10)
+    {
+        sscanf(++palavras, " %50[^,]s", tmp_palavras);
+        avlkeywords_insert_node(&new_k, tmp_palavras);
+        num_keywords += 1;
+        palavras = strchr(palavras, ',');
+    }
+    new_s = site_create(codigo, nome, relevancia, link, new_k, num_keywords);
+    avlsite_insert_node(&root, new_s);
+    free(addr_palavras);
+}
+
+int print_question(char *question)
+{
+    char escolha;
+    int answer;
+    printf("\n%s", question);
+    scanf(" %c", &escolha);
+    if(escolha == 's' || escolha == 'S')
+    {
+        answer = 0;
+    }
+    else
+    {
+        answer = 1;
+    }
+    return answer;
+}
+
+void menu_remover(AVL_SITE *root)
+{
+    unsigned int cod = 0;
+    CLEAR_SCREEN();
+    printf("####################################################\n");
+    printf("####################################################\n");
+    printf("# \t\t\t\t\t\t   #");
+    printf("\n#\t\tSites cadastrados \t\t   #\n# \t\t\t\t\t\t   #\n");
+    printf("####################################################\n");
+    printf("####################################################\n");
+    if(root != NULL)
+    {
+        avlsite_inorder(root);
+        printf("\n\nDigite o codigo do site que deseja remover: ");
+        scanf("%u", &cod);
+        avlsite_remove_node(&root, cod);
+    }
+    else
+    {
+        printf("Voce nao cadastrou nenhum site!\n");
+    }
+}
+
+void menu_inserir_pchave(AVL_SITE *root)
+{
+    KEYWORDS *k_tmp = NULL;
+    SITE *tmp = NULL;
+    char *w = NULL, *aux = NULL, *addr_w = NULL, keyword[50];
+    unsigned int cod = 0, nword = 0;
+    w = (char *) malloc(sizeof(char) * 300);
+    addr_w = w;
+    printf("####################################################\n");
+    printf("####################################################\n");
+    printf("# \t\t\t\t\t\t   #");
+    printf("\n#\t\tSites cadastrados \t\t   #\n# \t\t\t\t\t\t   #\n");
+    printf("####################################################\n");
+    printf("####################################################\n");
+    if(root != NULL)
+    {
+        avlsite_inorder(root);
+        printf("\n\nDigite o codigo do site que deseja inserir a(s) palavra(s)-chave: ");
+        scanf("%u", &cod);
+        tmp = avlsite_search(root, cod);
+        if(tmp != NULL)
+        {
+            printf("\nDigite as palavra(s)-chave separadas por virula (max. %u): ", abs(site_get_nkeywords(tmp) - 10));
+            scanf("%s", w);
+            while((w = strchr(w, ',')) != NULL)
+            {
+                nword += 1;
+                aux = w;
+                ++w;
+            }
+            char *l = ++aux;
+            if(l[0] != NULL)
+                nword += 1;
+            printf("QT PALAVAS: %d\n", nword);
+            if(abs((site_get_nkeywords(tmp) - nword)) <= 10)
+            {
+                w = addr_w;
+                k_tmp = site_get_keywords(tmp);
+                while(w != NULL)
+                {
+                    sscanf(w, " %50[^,]s", keyword);
+                    avlkeywords_insert_node(&k_tmp, keyword);
+                    w = strchr(w, ',');
+                    w++;
+                }
+            }
+            else
+            {
+                printf("O site so pode ter no max. 10 palavras-chave!\n");
+
+            }
+        }
+        else
+        {
+            printf("\n\nNenhum site corresponde ao codigo digitado!");
+        }
+    }
+    else
+    {
+        printf("\n\nNenhum site esta cadastrado!");
+    }
+    free(addr_w);
+}
+
+void menu_atualizar_relevancia(AVL_SITE *root)
+{
+    SITE *tmp = NULL;
+    unsigned int cod = 0, relevancia = 0;
+    CLEAR_SCREEN();
+    printf("####################################################\n");
+    printf("####################################################\n");
+    printf("# \t\t\t\t\t\t   #");
+    printf("\n#\t\tSites cadastrados \t\t   #\n# \t\t\t\t\t\t   #\n");
+    printf("####################################################\n");
+    printf("####################################################\n");
+    if(root != NULL)
+    {
+        avlsite_inorder(root);
+        printf("\n\nDigite o codigo do site que deseja atualizar a relevancia: ");
+        scanf("%u", &cod);
+        tmp = avlsite_search(root, cod);
+        if(tmp != NULL)
+        {
+            printf("\nDigite o novo valor que a relevancia do site tera: ");
+            scanf("%u", &relevancia);
+        }
+        else
+        {
+            printf("\n\nNenhum site corresponde ao codigo digitado!");
+        }
+    }
+    else
+    {
+        printf("\n\nNenhum site esta cadastrado!");
+    }
+}
