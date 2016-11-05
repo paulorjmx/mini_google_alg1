@@ -12,7 +12,7 @@ struct site
     unsigned int qt_keywords;
 };
 
-SITE *site_create(unsigned int code, char *nome, unsigned int relevance, char *link)
+SITE *site_create(unsigned int code, char *nome, unsigned int relevance, char *link, unsigned int num_keywords)
 {
     SITE *new = (SITE *) malloc(sizeof(SITE));
     if(new != NULL)
@@ -21,13 +21,18 @@ SITE *site_create(unsigned int code, char *nome, unsigned int relevance, char *l
         strcpy(new->nome, nome);
         new->relevancia = relevance;
         strcpy(new->link, link);
-        new->qt_keywords = 0;
+        new->qt_keywords = num_keywords;
     }
 }
 
 unsigned int site_get_code(SITE *s)
 {
     return s->codigo;
+}
+
+unsigned int site_get_nkeywords(SITE *s)
+{
+    return s->qt_keywords;
 }
 
 void site_free(SITE **s)
@@ -38,7 +43,7 @@ void site_free(SITE **s)
 
 void site_to_string(SITE *s)
 {
-    printf("CODIGO: %u\n", s->codigo);
+    printf("CODIGO %u\n", s->codigo);
     printf("NOME: %s\n", s->nome);
     printf("RELEVANCIA: %u\n", s->relevancia);
     printf("LINK: %s\n", s->link);
