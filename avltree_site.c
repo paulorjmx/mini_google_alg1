@@ -42,6 +42,22 @@ AVL_SITE *avlsite_create(SITE *s)
     }
 }
 
+void avlsite_inorder_file(AVL_SITE *root, FILE *arq)
+{
+    if(root != NULL)
+    {
+        avlsite_inorder_file(root->left, arq);
+        site_to_file(root->s, arq);
+        fseek(arq, -1, SEEK_CUR);
+        fprintf(arq, "\n");
+        avlsite_inorder_file(root->right, arq);
+    }
+    else
+    {
+        return;
+    }
+}
+
 void avlsite_insert_node(AVL_SITE **root, SITE *s)
 {
     if(site_get_code(s) < site_get_code((*root)->s))
