@@ -5,9 +5,11 @@
         typedef struct site SITE;
 
         SITE *site_create(unsigned int code, char *nome, unsigned int relevance, char *link, KEYWORDS *k, unsigned int num_keywords);
-        KEYWORDS *site_get_keywords(SITE *s);
+        KEYWORDS **site_get_keywords(SITE *s);
         unsigned int site_get_code(SITE *s);
         unsigned int site_get_nkeywords(SITE *s);
+        void site_update_nkeywords(SITE *s, unsigned int num_keywords);
+        void site_update_relevance(SITE *s, unsigned int relevance);
         void site_free(SITE **s);
         void site_to_string(SITE *s);
 #endif
