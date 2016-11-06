@@ -83,28 +83,28 @@ AVL_SITE *get_from_file(char *file_name)
             }
         }
 
-        num_keywords = 0;
-        sscanf(line, "%u", &code);
-        line = strchr(line, ',');
-        sscanf(++line, " %[^,]s", nome);
-        line = strchr(line, ',');
-        sscanf(++line, "%u", &relevancia);
-        line = strchr(line, ',');
-        sscanf(++line, " %[^,]s", link);
-        line = strchr(line, ',');
-        sscanf(++line, " %[^,]s", keyword);
-        avlkeywords_tmp = avlkeywords_create(keyword);
-        num_keywords += 1;
-        line = strchr(line, ',');
-        while(line != NULL)
-        {
-            sscanf(++line, " %[^,]s", keyword);
-            avlkeywords_insert_node(&avlkeywords_tmp, keyword);
-            num_keywords += 1;
-            line = strchr(line, ',');
-        }
-        s = site_create(code, nome, relevancia, link, avlkeywords_tmp, num_keywords);
-        avlsite_insert_node(&avlsite_tmp, s);
+        // num_keywords = 0;
+        // sscanf(line, "%u", &code);
+        // line = strchr(line, ',');
+        // sscanf(++line, " %[^,]s", nome);
+        // line = strchr(line, ',');
+        // sscanf(++line, "%u", &relevancia);
+        // line = strchr(line, ',');
+        // sscanf(++line, " %[^,]s", link);
+        // line = strchr(line, ',');
+        // sscanf(++line, " %[^,]s", keyword);
+        // avlkeywords_tmp = avlkeywords_create(keyword);
+        // num_keywords += 1;
+        // line = strchr(line, ',');
+        // while(line != NULL)
+        // {
+        //     sscanf(++line, " %[^,]s", keyword);
+        //     avlkeywords_insert_node(&avlkeywords_tmp, keyword);
+        //     num_keywords += 1;
+        //     line = strchr(line, ',');
+        // }
+        // s = site_create(code, nome, relevancia, link, avlkeywords_tmp, num_keywords);
+        // avlsite_insert_node(&avlsite_tmp, s);
     }
     else
     {
@@ -174,8 +174,10 @@ void menu()
 
             case '5':
                 escolha = -1;
+                FILE *a = fopen("googlebot.txt", "w");
+                avlsite_inorder_file(root, a);
+                fclose(a);
                 avlsite_free(&root);
-                // write_on_file(l, "googlebot.txt");
                 break;
 
             default:
