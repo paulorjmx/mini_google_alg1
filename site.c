@@ -1,5 +1,4 @@
 #include "inc/site.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -71,4 +70,10 @@ void site_to_string(SITE *s)
     printf("KEYWORDS: ");
     avlkeywords_inorder(s->k_root);
     printf("\nQUANT. KEYWORDS: %u\n", s->qt_keywords);
+}
+
+void site_to_file(SITE *s, FILE *arq)
+{
+    fprintf(arq, "%u,%s,%u,%s,", s->codigo, s->nome, s->relevancia, s->link);
+    avlkeywords_inorder_file(s->k_root, arq);
 }
