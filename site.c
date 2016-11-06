@@ -27,6 +27,11 @@ SITE *site_create(unsigned int code, char *nome, unsigned int relevance, char *l
     }
 }
 
+void site_update_relevance(SITE *s, unsigned int relevance)
+{
+    s->relevancia = relevance;
+}
+
 unsigned int site_get_code(SITE *s)
 {
     return s->codigo;
@@ -47,9 +52,14 @@ void site_free(SITE **s)
     *s = NULL;
 }
 
-KEYWORDS *site_get_keywords(SITE *s)
+void site_update_nkeywords(SITE *s, unsigned int num_keywords)
 {
-    return s->k_root;
+    s->qt_keywords = num_keywords;
+}
+
+KEYWORDS **site_get_keywords(SITE *s)
+{
+    return &(s->k_root);
 }
 
 void site_to_string(SITE *s)
