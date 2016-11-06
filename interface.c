@@ -250,7 +250,14 @@ void menu_remover(AVL_SITE *root)
         avlsite_inorder(root);
         printf("\n\nDigite o codigo do site que deseja remover: ");
         scanf("%u", &cod);
-        avlsite_remove_node(&root, cod);
+        if(avlsite_search(root, code) != NULL)
+        {
+            avlsite_remove_node(&root, cod);
+        }
+        else
+        {
+            printf("\nO site nao esta cadastrado!\n");
+        }
     }
     else
     {
