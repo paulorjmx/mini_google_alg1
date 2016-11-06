@@ -1,4 +1,12 @@
-1,YouTube,900,https://www.youtube.com/,youtube,videos,online
-2,Netflix,800,https://www.netflix.com/br,netflix,videos,streaming
-3,Facebook,880,https://www.facebook.com/,facebook,rede,social,amigos,compartilhamento
-4,TESTE,180,https://www.teste.com/,teste
+1,YouTube,900,https://www.youtube.com/,online,videos,youtube,youtube
+2,Netflix,800,https://www.netflix.com/br,netflix,streaming,videos,videos
+3,Facebook,880,https://www.facebook.com/,amigos,compartilhamento,facebook,rede,social,social
+4,TESTE,180,https://www.teste.com/,teste,teste
+5,Lolipop,500,https://www.lolipop.com/,android,lolipop,tera
+7,StackOverflow,760,https://stackoverflow.com/,help,overflow,programming,stack
+8,Backspace,150,http://backspace.com,back,backspace,space
+9,SpacJam,20,http://spacjam.warner.com/,jam,jordan,michael,spac,television,warner
+10,Matrix,980,https://enterthematrix.com/,enter,matrix,morpheu,neo,the,trinity
+11,MatrixReloaded,23,https://matrixreloaded.com/,matrix,reloaded
+12,Github,1250,https://github.com/,contribute,control,git,github,repositories,svn,version
+13,Orkut,500,https://orkut.com/ptbr,amigos,fotos,orkut,rede,sharing,social,videos
