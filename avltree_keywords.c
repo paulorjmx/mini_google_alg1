@@ -1,5 +1,4 @@
 #include "inc/avltree_keywords.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -160,6 +159,20 @@ int avlkeywords_remove_node(KEYWORDS **root, char *keyword)
             else
                 avlkeywords_remove_node(&(*root)->right, keyword);
         }
+    }
+}
+
+void avlkeywords_inorder_file(KEYWORDS *root, FILE *arq)
+{
+    if(root != NULL)
+    {
+        avlkeywords_inorder_file(root->left, arq);
+        fprintf(arq, "%s,", root->keyword);
+        avlkeywords_inorder_file(root->right, arq);
+    }
+    else
+    {
+        return;
     }
 }
 
