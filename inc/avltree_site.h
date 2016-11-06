@@ -12,6 +12,7 @@
         SITE *avlsite_search_smaller_right(AVL_SITE *root);
         void avlsite_free(AVL_SITE **root);
         void avlsite_inorder(AVL_SITE *root);
+        void avlsite_inorder_file(AVL_SITE *root, FILE *arq);
         int avlsite_height(AVL_SITE *root);
         void avlsite_rotate_right(AVL_SITE **root);
         void avlsite_rotate_left(AVL_SITE **root);
