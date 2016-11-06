@@ -110,7 +110,8 @@ void menu()
         printf("\n\t\t[2] Remover Site");
         printf("\n\t\t[3] Inserir Palavra-chave");
         printf("\n\t\t[4] Atualizar Relevancia");
-        printf("\n\t\t[5] Sair");
+        printf("\n\t\t[5] Busca por palavra-chave");
+        printf("\n\t\t[6] Sair");
         printf("\n\t\t-> ");
 
         scanf(" %c", &escolha);
@@ -150,6 +151,14 @@ void menu()
                 break;
 
             case '5':
+                menu_busca_palavra(root);
+                while (print_question("Deseja realizar mais alguma busca?[s/N]: ") == 0)
+                {
+                    menu_busca_palavra(root);
+                }
+                break;
+
+            case '6':
                 escolha = -1;
                 FILE *a = fopen("googlebot.txt", "w");
                 avlsite_inorder_file(root, a);
@@ -250,7 +259,7 @@ void menu_remover(AVL_SITE *root)
         avlsite_inorder(root);
         printf("\n\nDigite o codigo do site que deseja remover: ");
         scanf("%u", &cod);
-        if(avlsite_search(root, code) != NULL)
+        if(avlsite_search(root, cod) != NULL)
         {
             avlsite_remove_node(&root, cod);
         }
@@ -361,4 +370,16 @@ void menu_atualizar_relevancia(AVL_SITE *root)
     {
         printf("\n\nNenhum site esta cadastrado!");
     }
+}
+
+void menu_busca_palavra(AVL_SITE *root)
+{
+    CLEAR_SCREEN();
+    printf("####################################################\n");
+    printf("####################################################\n");
+    printf("# \t\t\t\t\t\t   #");
+    printf("\n#\tBusca por palavra-chave \t\t   #\n# \t\t\t\t\t\t   #\n");
+    printf("####################################################\n");
+    printf("####################################################\n");
+    avlsite_postorder(root);
 }
