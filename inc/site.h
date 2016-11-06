@@ -1,6 +1,7 @@
 #ifndef SITE_H
     #define SITE_H
         #include "avltree_keywords.h"
+        #include <stdio.h>
 
         typedef struct site SITE;
 
@@ -12,4 +13,5 @@
         void site_update_relevance(SITE *s, unsigned int relevance);
         void site_free(SITE **s);
         void site_to_string(SITE *s);
+        void site_to_file(SITE *s, FILE *arq);
 #endif
