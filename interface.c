@@ -141,10 +141,10 @@ void menu()
         switch(escolha)
         {
             case '1':
-                menu_inserir(root);
+                menu_inserir(&root);
                 while(print_question("Deseja inserir mais algum site?[s/N]: ") == 0)
                 {
-                    menu_inserir(root);
+                    menu_inserir(&root);
                 }
                 break;
 
@@ -184,15 +184,14 @@ void menu()
     }
 }
 
-void menu_inserir(AVL_SITE *root)
+void menu_inserir(AVL_SITE **root)
 {
     SITE *new_s = NULL;
     KEYWORDS *new_k = NULL;
-    fflush(stdin);
-    size_t nbytes = 500;
     unsigned int codigo = 0, relevancia = 0, num_keywords = 0;
-    char nome[50], link[100], tmp_palavras[50], *palavras = NULL, *addr_palavras = NULL;
-    palavras = (char *) malloc(sizeof(char) * nbytes);
+    char nome[50], link[100], *tmp_palavras = NULL, *palavras = NULL, *addr_palavras = NULL;
+    palavras = (char *) malloc(sizeof(char) * 500);
+    tmp_palavras = (char *) malloc(sizeof(char) * 50);
     addr_palavras = palavras;
     if(palavras == NULL)
     {
@@ -208,27 +207,35 @@ void menu_inserir(AVL_SITE *root)
     printf("####################################################\n");
     printf("\nDigite o codigo do site: ");
     scanf("%u", &codigo);
-    printf("\nDigite o nome do site: ");
-    scanf(" %50[^\n]s", nome);
-    printf("\nDigite o link para o site: ");
-    scanf("%100s", link);
-    printf("\nDigite a relevancia que o site tera: ");
-    scanf("%u", &relevancia);
-    printf("\nDigite as palavras chaves separadas por virgula (max. 10): ");
-    scanf("%s", palavras);
-    sscanf(palavras, " %50[^,]s", tmp_palavras);
-    new_k = avlkeywords_create(tmp_palavras);
-    num_keywords += 1;
-    palavras = strchr(palavras, ',');
-    while(palavras != NULL && num_keywords <= 10)
+    new_s = avlsite_search((*root), codigo);
+    if(new_s == NULL)
     {
-        sscanf(++palavras, " %50[^,]s", tmp_palavras);
-        avlkeywords_insert_node(&new_k, tmp_palavras);
+        printf("\nDigite o nome do site: ");
+        scanf(" %[^\n]s", nome);
+        printf("\nDigite o link para o site: ");
+        scanf("%s", link);
+        printf("\nDigite a relevancia que o site tera: ");
+        scanf("%u", &relevancia);
+        printf("\nDigite as palavras chaves separadas por virgula (max. 10): ");
+        scanf("%s", palavras);
+        sscanf(palavras, " %[^,]s", tmp_palavras);
+        new_k = avlkeywords_create(tmp_palavras);
         num_keywords += 1;
         palavras = strchr(palavras, ',');
+        while(palavras != NULL && num_keywords <= 10)
+        {
+            sscanf(++palavras, " %[^,]s", tmp_palavras);
+            avlkeywords_insert_node(&new_k, tmp_palavras);
+            num_keywords += 1;
+            palavras = strchr(palavras, ',');
+        }
+        new_s = site_create(codigo, nome, relevancia, link, new_k, num_keywords);
+        avlsite_insert_node(root, new_s);
     }
-    new_s = site_create(codigo, nome, relevancia, link, new_k, num_keywords);
-    avlsite_insert_node(&root, new_s);
+    else
+    {
+        printf("\nEsse codigo ja existe!\n");
+    }
     free(addr_palavras);
 }
 
@@ -274,11 +281,12 @@ void menu_remover(AVL_SITE *root)
 
 void menu_inserir_pchave(AVL_SITE *root)
 {
-    KEYWORDS *k_tmp = NULL;
+    KEYWORDS **k_tmp = NULL;
     SITE *tmp = NULL;
-    char *w = NULL, *aux = NULL, *addr_w = NULL, keyword[50];
-    unsigned int cod = 0, nword = 0;
+    char *w = NULL, *addr_w = NULL, *keyword;
+    unsigned int cod = 0, nword = 1;
     w = (char *) malloc(sizeof(char) * 300);
+    keyword = (char *) malloc(sizeof(char) * 50);
     addr_w = w;
     printf("####################################################\n");
     printf("####################################################\n");
@@ -294,29 +302,28 @@ void menu_inserir_pchave(AVL_SITE *root)
         tmp = avlsite_search(root, cod);
         if(tmp != NULL)
         {
-            printf("\nDigite as palavra(s)-chave separadas por virula (max. %u): ", abs(site_get_nkeywords(tmp) - 10));
+            printf("\nDigite as palavra(s)-chave separadas por virgula (max. %u): ", abs(site_get_nkeywords(tmp) - 10));
             scanf("%s", w);
             while((w = strchr(w, ',')) != NULL)
             {
                 nword += 1;
-                aux = w;
                 ++w;
             }
-            char *l = ++aux;
-            if(l[0] != NULL)
-                nword += 1;
-            printf("QT PALAVAS: %d\n", nword);
             if(abs((site_get_nkeywords(tmp) - nword)) <= 10)
             {
                 w = addr_w;
                 k_tmp = site_get_keywords(tmp);
+                sscanf(w, " %[^,]s", keyword);
+                avlkeywords_insert_node(k_tmp, keyword);
+                w = strchr(w, ',');
                 while(w != NULL)
                 {
-                    sscanf(w, " %50[^,]s", keyword);
-                    avlkeywords_insert_node(&k_tmp, keyword);
+                    sscanf(++w, " %[^,]s", keyword);
+                    avlkeywords_insert_node(k_tmp, keyword);
                     w = strchr(w, ',');
-                    w++;
                 }
+                nword += site_get_nkeywords(tmp);
+                site_update_nkeywords(tmp, nword);
             }
             else
             {
@@ -357,6 +364,7 @@ void menu_atualizar_relevancia(AVL_SITE *root)
         {
             printf("\nDigite o novo valor que a relevancia do site tera: ");
             scanf("%u", &relevancia);
+            site_update_relevance(tmp, relevancia);
         }
         else
         {
