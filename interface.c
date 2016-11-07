@@ -304,7 +304,7 @@ void menu_inserir_pchave(AVL_SITE *root)
                 nword += 1;
                 ++w;
             }
-            if(abs((site_get_nkeywords(tmp) - nword)) <= 10)
+            if((site_get_nkeywords(tmp) + nword) <= 10)
             {
                 w = addr_w;
                 k_tmp = site_get_keywords(tmp);
@@ -322,7 +322,7 @@ void menu_inserir_pchave(AVL_SITE *root)
             }
             else
             {
-                printf("O site so pode ter no max. 10 palavras-chave!\n");
+                printf("\n\nO site so pode ter no max. 10 palavras-chave!\n");
 
             }
         }
@@ -381,5 +381,4 @@ void menu_busca_palavra(AVL_SITE *root)
     printf("\n#\tBusca por palavra-chave \t\t   #\n# \t\t\t\t\t\t   #\n");
     printf("####################################################\n");
     printf("####################################################\n");
-    avlsite_postorder(root);
 }
