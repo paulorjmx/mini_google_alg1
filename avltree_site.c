@@ -350,7 +350,23 @@ void avlsite_postorder(AVL_SITE *root)
     {
         avlsite_postorder(root->right);
         site_to_string(root->s);
+        printf("\n\n");
         avlsite_postorder(root->left);
+    }
+    else
+    {
+        return;
+    }
+}
+
+void avlsite_free_onlynode(AVL_SITE **root)
+{
+    if((*root) != NULL)
+    {
+        avlsite_free_onlynode(&(*root)->right);
+        avlsite_free_onlynode(&(*root)->left);
+        free((*root));
+        (*root) = NULL;
     }
     else
     {
