@@ -392,8 +392,9 @@ void menu_busca_palavra(AVL_SITE *root)
         tmp_s = site_create(0, "INVALID", 3, "RAIZ", NULL, 0);
         result = avlsite_create(tmp_s);
         avlsite_search_keyword(root, &result, palavra);
+        avlsite_remove_node(&result, 0);
         avlsite_postorder(result);
-        avlsite_free(&result);
+        avlsite_free_onlynode(&result);
         free(palavra);
     }
     else
