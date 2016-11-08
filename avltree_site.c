@@ -359,6 +359,20 @@ void avlsite_postorder(AVL_SITE *root)
     }
 }
 
+void avlsite_postorder_namelink(AVL_SITE *root)
+{
+    if(root != NULL)
+    {
+        avlsite_postorder_namelink(root->right);
+        site_print_namelink(root->s);
+        avlsite_postorder_namelink(root->left);
+    }
+    else
+    {
+        return;
+    }
+}
+
 void avlsite_free_onlynode(AVL_SITE **root)
 {
     if((*root) != NULL)
