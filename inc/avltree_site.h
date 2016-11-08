@@ -16,6 +16,7 @@
         void avlsite_free_onlynode(AVL_SITE **root);
         void avlsite_inorder(AVL_SITE *root);
         void avlsite_postorder(AVL_SITE *root);
+        void avlsite_postorder_namelink(AVL_SITE *root);
         void avlsite_inorder_file(AVL_SITE *root, FILE *arq);
         int avlsite_height(AVL_SITE *root);
         void avlsite_rotate_right(AVL_SITE **root);
