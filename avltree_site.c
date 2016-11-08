@@ -110,6 +110,58 @@ void avlsite_insert_node(AVL_SITE **root, SITE *s)
     }
 }
 
+void avlsite_insert_node_relevance(AVL_SITE **root, SITE *s)
+{
+    if(site_get_relevance(s) < site_get_relevance((*root)->s))
+    {
+        if((*root)->left != NULL)
+        {
+            avlsite_insert_node_relevance(&(*root)->left, s);
+        }
+        else
+        {
+            (*root)->left = avlsite_create(s);
+        }
+    }
+    else
+    {
+        if((*root)->right != NULL)
+        {
+            avlsite_insert_node_relevance(&(*root)->right, s);
+        }
+        else
+        {
+            (*root)->right = avlsite_create(s);
+        }
+    }
+
+    int fb = (avlsite_height((*root)->left) - avlsite_height((*root)->right));
+    if(fb == 2)
+    {
+        if(site_get_relevance(s) < site_get_relevance((*root)->left->s))
+        {
+            avlsite_rotate_right(root);
+        }
+        else
+        {
+            avlsite_rotate_left(&(*root)->left);
+            avlsite_rotate_right(root);
+        }
+    }
+    else if(fb == -2)
+    {
+        if(site_get_relevance(s) > site_get_relevance((*root)->right->s))
+        {
+            avlsite_rotate_left(root);
+        }
+        else
+        {
+            avlsite_rotate_right(&(*root)->right);
+            avlsite_rotate_left(root);
+        }
+    }
+}
+
 int avlsite_remove_node(AVL_SITE **root, unsigned int code)
 {
     if((*root) == NULL)
@@ -268,6 +320,37 @@ void avlsite_inorder(AVL_SITE *root)
         site_to_string(root->s);
         printf("\n\n");
         avlsite_inorder(root->right);
+    }
+    else
+    {
+        return;
+    }
+}
+
+void avlsite_search_keyword(AVL_SITE *root, AVL_SITE **result_tree, char *keyword)
+{
+    if(root != NULL)
+    {
+        avlsite_search_keyword(root->right, result_tree, keyword);
+        if(site_search_keyword(root->s, keyword) == 0)
+        {
+            avlsite_insert_node_relevance(result_tree, root->s);
+        }
+        avlsite_search_keyword(root->left, result_tree, keyword);
+    }
+    else
+    {
+        return;
+    }
+}
+
+void avlsite_postorder(AVL_SITE *root)
+{
+    if(root != NULL)
+    {
+        avlsite_postorder(root->right);
+        site_to_string(root->s);
+        avlsite_postorder(root->left);
     }
     else
     {
