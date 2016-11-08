@@ -107,3 +107,8 @@ int site_search_keyword(SITE *s, char *keyword)
 
     return 1;
 }
+
+void site_print_namelink(SITE *s)
+{
+    printf("%s\t\t%s\n", s->nome, s->link);
+}
