@@ -36,6 +36,11 @@ unsigned int site_get_code(SITE *s)
     return s->codigo;
 }
 
+unsigned int site_get_relevance(SITE *s)
+{
+    return s->relevancia;
+}
+
 unsigned int site_get_nkeywords(SITE *s)
 {
     return s->qt_keywords;
@@ -43,17 +48,23 @@ unsigned int site_get_nkeywords(SITE *s)
 
 void site_free(SITE **s)
 {
-    if((*s)->k_root != NULL)
+    if(s != NULL)
     {
-        avlkeywords_free(&(*s)->k_root);
+        if((*s)->k_root != NULL)
+        {
+            avlkeywords_free(&(*s)->k_root);
+        }
+        free((*s));
+        *s = NULL;
     }
-    free((*s));
-    *s = NULL;
 }
 
 void site_update_nkeywords(SITE *s, unsigned int num_keywords)
 {
-    s->qt_keywords = num_keywords;
+    if(s != NULL)
+    {
+        s->qt_keywords = num_keywords;
+    }
 }
 
 KEYWORDS **site_get_keywords(SITE *s)
@@ -63,17 +74,41 @@ KEYWORDS **site_get_keywords(SITE *s)
 
 void site_to_string(SITE *s)
 {
-    printf("CODIGO %u\n", s->codigo);
-    printf("NOME: %s\n", s->nome);
-    printf("RELEVANCIA: %u\n", s->relevancia);
-    printf("LINK: %s\n", s->link);
-    printf("KEYWORDS: ");
-    avlkeywords_inorder(s->k_root);
-    printf("\nQUANT. KEYWORDS: %u\n", s->qt_keywords);
+    if(s != NULL)
+    {
+        printf("CODIGO %u\n", s->codigo);
+        printf("NOME: %s\n", s->nome);
+        printf("RELEVANCIA: %u\n", s->relevancia);
+        printf("LINK: %s\n", s->link);
+        printf("KEYWORDS: ");
+        avlkeywords_inorder(s->k_root);
+        printf("\nQUANT. KEYWORDS: %u\n", s->qt_keywords);
+    }
 }
 
 void site_to_file(SITE *s, FILE *arq)
 {
-    fprintf(arq, "%u,%s,%u,%s,", s->codigo, s->nome, s->relevancia, s->link);
-    avlkeywords_inorder_file(s->k_root, arq);
+    if(s != NULL)
+    {
+        fprintf(arq, "%u,%s,%u,%s,", s->codigo, s->nome, s->relevancia, s->link);
+        avlkeywords_inorder_file(s->k_root, arq);
+    }
+}
+
+int site_search_keyword(SITE *s, char *keyword)
+{
+    if(s != NULL)
+    {
+        if(avlkeywords_search(s->k_root, keyword) != NULL)
+        {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+void site_print_namelink(SITE *s)
+{
+    printf("%s\t\t%s\n", s->nome, s->link);
 }
