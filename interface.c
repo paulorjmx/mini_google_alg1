@@ -374,6 +374,10 @@ void menu_atualizar_relevancia(AVL_SITE *root)
 
 void menu_busca_palavra(AVL_SITE *root)
 {
+    SITE *tmp_s = NULL;
+    AVL_SITE *result = NULL;
+    char *palavra = NULL;
+    palavra = (char *) malloc(sizeof(char) * 50);
     CLEAR_SCREEN();
     printf("####################################################\n");
     printf("####################################################\n");
@@ -381,4 +385,19 @@ void menu_busca_palavra(AVL_SITE *root)
     printf("\n#\tBusca por palavra-chave \t\t   #\n# \t\t\t\t\t\t   #\n");
     printf("####################################################\n");
     printf("####################################################\n");
+    if(root != NULL)
+    {
+        printf("\n\nDigite a palavra-chave que deseja buscar: ");
+        scanf("%s", palavra);
+        tmp_s = site_create(0, "INVALID", 3, "RAIZ", NULL, 0);
+        result = avlsite_create(tmp_s);
+        avlsite_search_keyword(root, &result, palavra);
+        avlsite_postorder(result);
+        avlsite_free(&result);
+        free(palavra);
+    }
+    else
+    {
+        printf("\n\nNenhum site esta cadastrado!");
+    }
 }
