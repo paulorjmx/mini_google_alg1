@@ -60,105 +60,119 @@ void avlsite_inorder_file(AVL_SITE *root, FILE *arq)
 
 void avlsite_insert_node(AVL_SITE **root, SITE *s)
 {
-    if(site_get_code(s) < site_get_code((*root)->s))
+    if((*root) != NULL)
     {
-        if((*root)->left != NULL)
+        if(site_get_code(s) < site_get_code((*root)->s))
         {
-            avlsite_insert_node(&(*root)->left, s);
+            if((*root)->left != NULL)
+            {
+                avlsite_insert_node(&(*root)->left, s);
+            }
+            else
+            {
+                (*root)->left = avlsite_create(s);
+            }
         }
         else
         {
-            (*root)->left = avlsite_create(s);
+            if((*root)->right != NULL)
+            {
+                avlsite_insert_node(&(*root)->right, s);
+            }
+            else
+            {
+                (*root)->right = avlsite_create(s);
+            }
+        }
+
+        int fb = (avlsite_height((*root)->left) - avlsite_height((*root)->right));
+        if(fb == 2)
+        {
+            if(site_get_code(s) < site_get_code((*root)->left->s))
+            {
+                avlsite_rotate_right(root);
+            }
+            else
+            {
+                avlsite_rotate_left(&(*root)->left);
+                avlsite_rotate_right(root);
+            }
+        }
+        else if(fb == -2)
+        {
+            if(site_get_code(s) > site_get_code((*root)->right->s))
+            {
+                avlsite_rotate_left(root);
+            }
+            else
+            {
+                avlsite_rotate_right(&(*root)->right);
+                avlsite_rotate_left(root);
+            }
         }
     }
     else
     {
-        if((*root)->right != NULL)
-        {
-            avlsite_insert_node(&(*root)->right, s);
-        }
-        else
-        {
-            (*root)->right = avlsite_create(s);
-        }
-    }
-
-    int fb = (avlsite_height((*root)->left) - avlsite_height((*root)->right));
-    if(fb == 2)
-    {
-        if(site_get_code(s) < site_get_code((*root)->left->s))
-        {
-            avlsite_rotate_right(root);
-        }
-        else
-        {
-            avlsite_rotate_left(&(*root)->left);
-            avlsite_rotate_right(root);
-        }
-    }
-    else if(fb == -2)
-    {
-        if(site_get_code(s) > site_get_code((*root)->right->s))
-        {
-            avlsite_rotate_left(root);
-        }
-        else
-        {
-            avlsite_rotate_right(&(*root)->right);
-            avlsite_rotate_left(root);
-        }
+        (*root) = avlsite_create(s);
     }
 }
 
 void avlsite_insert_node_relevance(AVL_SITE **root, SITE *s)
 {
-    if(site_get_relevance(s) < site_get_relevance((*root)->s))
+    if((*root) != NULL)
     {
-        if((*root)->left != NULL)
+        if(site_get_relevance(s) < site_get_relevance((*root)->s))
         {
-            avlsite_insert_node_relevance(&(*root)->left, s);
+            if((*root)->left != NULL)
+            {
+                avlsite_insert_node_relevance(&(*root)->left, s);
+            }
+            else
+            {
+                (*root)->left = avlsite_create(s);
+            }
         }
         else
         {
-            (*root)->left = avlsite_create(s);
+            if((*root)->right != NULL)
+            {
+                avlsite_insert_node_relevance(&(*root)->right, s);
+            }
+            else
+            {
+                (*root)->right = avlsite_create(s);
+            }
+        }
+
+        int fb = (avlsite_height((*root)->left) - avlsite_height((*root)->right));
+        if(fb == 2)
+        {
+            if(site_get_relevance(s) < site_get_relevance((*root)->left->s))
+            {
+                avlsite_rotate_right(root);
+            }
+            else
+            {
+                avlsite_rotate_left(&(*root)->left);
+                avlsite_rotate_right(root);
+            }
+        }
+        else if(fb == -2)
+        {
+            if(site_get_relevance(s) > site_get_relevance((*root)->right->s))
+            {
+                avlsite_rotate_left(root);
+            }
+            else
+            {
+                avlsite_rotate_right(&(*root)->right);
+                avlsite_rotate_left(root);
+            }
         }
     }
     else
     {
-        if((*root)->right != NULL)
-        {
-            avlsite_insert_node_relevance(&(*root)->right, s);
-        }
-        else
-        {
-            (*root)->right = avlsite_create(s);
-        }
-    }
-
-    int fb = (avlsite_height((*root)->left) - avlsite_height((*root)->right));
-    if(fb == 2)
-    {
-        if(site_get_relevance(s) < site_get_relevance((*root)->left->s))
-        {
-            avlsite_rotate_right(root);
-        }
-        else
-        {
-            avlsite_rotate_left(&(*root)->left);
-            avlsite_rotate_right(root);
-        }
-    }
-    else if(fb == -2)
-    {
-        if(site_get_relevance(s) > site_get_relevance((*root)->right->s))
-        {
-            avlsite_rotate_left(root);
-        }
-        else
-        {
-            avlsite_rotate_right(&(*root)->right);
-            avlsite_rotate_left(root);
-        }
+        (*root) = avlsite_create(s);
     }
 }
 
