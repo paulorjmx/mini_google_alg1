@@ -389,8 +389,6 @@ void menu_busca_palavra(AVL_SITE *root)
     {
         printf("\n\nDigite a palavra-chave que deseja buscar: ");
         scanf("%s", palavra);
-        // tmp_s = site_create(0, "INVALID", 3, "RAIZ", NULL, 0);
-        // result = avlsite_create(tmp_s);
         avlsite_search_keyword(root, &result, palavra);
         if(result != NULL)
         {
