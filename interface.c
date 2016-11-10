@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include "inc/interface.h"
 
 int print_question(char *question);
@@ -22,72 +23,79 @@ AVL_SITE *get_from_file(char *file_name)
     unsigned int code = 0, relevancia = 0, num_keywords = 0;
     line = (char *) malloc(sizeof(char) * 1000);
     char *addr_line = line;
-    FILE *arq = fopen(file_name, "a+");
-    if(arq != NULL)
+    if(access(file_name, F_OK) != -1)
     {
-        fscanf(arq, "%s", line);
-        sscanf(line, "%u", &code);
-        line = strchr(line, ',');
-        sscanf(++line, " %[^,]s", nome);
-        line = strchr(line, ',');
-        sscanf(++line, "%u", &relevancia);
-        line = strchr(line, ',');
-        sscanf(++line, " %[^,]s", link);
-        line = strchr(line, ',');
-        sscanf(++line, " %[^,]s", keyword);
-        avlkeywords_tmp = avlkeywords_create(keyword);
-        num_keywords += 1;
-        line = strchr(line, ',');
-        while(line != NULL)
+        FILE *arq = fopen(file_name, "a+");
+        if(arq != NULL)
         {
+            fscanf(arq, "%s", line);
+            sscanf(line, "%u", &code);
+            line = strchr(line, ',');
+            sscanf(++line, " %[^,]s", nome);
+            line = strchr(line, ',');
+            sscanf(++line, "%u", &relevancia);
+            line = strchr(line, ',');
+            sscanf(++line, " %[^,]s", link);
+            line = strchr(line, ',');
             sscanf(++line, " %[^,]s", keyword);
-            avlkeywords_insert_node(&avlkeywords_tmp, keyword);
+            avlkeywords_tmp = avlkeywords_create(keyword);
             num_keywords += 1;
             line = strchr(line, ',');
-        }
-        s = site_create(code, nome, relevancia, link, avlkeywords_tmp, num_keywords);
-        avlsite_tmp = avlsite_create(s);
-
-        while(1)
-        {
-            line = addr_line;
-            fscanf(arq, "%s", line);
-            if(feof(arq))
+            while(line != NULL)
             {
-                break;
-            }
-            else
-            {
-                num_keywords = 0;
-                sscanf(line, "%u", &code);
-                line = strchr(line, ',');
-                sscanf(++line, " %[^,]s", nome);
-                line = strchr(line, ',');
-                sscanf(++line, "%u", &relevancia);
-                line = strchr(line, ',');
-                sscanf(++line, " %[^,]s", link);
-                line = strchr(line, ',');
                 sscanf(++line, " %[^,]s", keyword);
-                avlkeywords_tmp = avlkeywords_create(keyword);
+                avlkeywords_insert_node(&avlkeywords_tmp, keyword);
                 num_keywords += 1;
                 line = strchr(line, ',');
-                while(line != NULL)
+            }
+            s = site_create(code, nome, relevancia, link, avlkeywords_tmp, num_keywords);
+            avlsite_tmp = avlsite_create(s);
+
+            while(1)
+            {
+                line = addr_line;
+                fscanf(arq, "%s", line);
+                if(feof(arq))
                 {
+                    break;
+                }
+                else
+                {
+                    num_keywords = 0;
+                    sscanf(line, "%u", &code);
+                    line = strchr(line, ',');
+                    sscanf(++line, " %[^,]s", nome);
+                    line = strchr(line, ',');
+                    sscanf(++line, "%u", &relevancia);
+                    line = strchr(line, ',');
+                    sscanf(++line, " %[^,]s", link);
+                    line = strchr(line, ',');
                     sscanf(++line, " %[^,]s", keyword);
-                    avlkeywords_insert_node(&avlkeywords_tmp, keyword);
+                    avlkeywords_tmp = avlkeywords_create(keyword);
                     num_keywords += 1;
                     line = strchr(line, ',');
+                    while(line != NULL)
+                    {
+                        sscanf(++line, " %[^,]s", keyword);
+                        avlkeywords_insert_node(&avlkeywords_tmp, keyword);
+                        num_keywords += 1;
+                        line = strchr(line, ',');
+                    }
+                    s = site_create(code, nome, relevancia, link, avlkeywords_tmp, num_keywords);
+                    avlsite_insert_node(&avlsite_tmp, s);
                 }
-                s = site_create(code, nome, relevancia, link, avlkeywords_tmp, num_keywords);
-                avlsite_insert_node(&avlsite_tmp, s);
             }
         }
+        else
+        {
+            printf("NAO FOI POSSIVEL ABRIR O ARQUIVO\n");
+        }
+        fclose(arq);
     }
     else
     {
-        printf("NAO FOI POSSIVEL ABRIR O ARQUIVO\n");
+        return NULL;
     }
-    fclose(arq);
     free(addr_line);
     return avlsite_tmp;
 }
