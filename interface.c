@@ -11,7 +11,7 @@ int print_question(char *question);
 #endif
 
 #ifdef __linux__
-    #define CLEAR_SCREEN() system("clear");
+    #define CLEAR_SCREEN() system("");
 #endif
 
 AVL_SITE *get_from_file(char *file_name)
@@ -102,8 +102,9 @@ AVL_SITE *get_from_file(char *file_name)
 
 void menu()
 {
+    FILE *a = NULL;
     AVL_SITE *root = get_from_file("googlebot.txt");
-    char escolha;
+    char escolha = '7';
     while(escolha != -1)
     {
         CLEAR_SCREEN();
@@ -168,7 +169,7 @@ void menu()
 
             case '6':
                 escolha = -1;
-                FILE *a = fopen("googlebot.txt", "w");
+                a = fopen("googlebot.txt", "w");
                 avlsite_inorder_file(root, a);
                 fclose(a);
                 avlsite_free(&root);
