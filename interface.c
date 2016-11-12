@@ -11,7 +11,7 @@ int print_question(char *question);
 #endif
 
 #ifdef __linux__
-    #define CLEAR_SCREEN() system("");
+    #define CLEAR_SCREEN() system("clear");
 #endif
 
 AVL_SITE *get_from_file(char *file_name)
