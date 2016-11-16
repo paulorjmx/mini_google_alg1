@@ -198,15 +198,11 @@ int avlsite_remove_node(AVL_SITE **root, unsigned int code)
                 if((*root)->left == NULL)
                 {
                     (*root)->s = (*root)->right->s;
-                    // free((*root)->right);
-                    // (*root)->right = NULL;
                     avlsite_free_onlynode(&(*root)->right);
                 }
                 else if((*root)->right == NULL)
                 {
                     (*root)->s = (*root)->left->s;
-                    // free((*root)->left);
-                    // (*root)->left = NULL;
                     avlsite_free_onlynode(&(*root)->left);
                 }
                 else
@@ -228,11 +224,11 @@ int avlsite_remove_node(AVL_SITE **root, unsigned int code)
             }
             else if(fb == -2)
             {
-                if((avlsite_height((*root)->left->left) - avlsite_height((*root)->left->right)) <= 0)
+                if((avlsite_height((*root)->right->left) - avlsite_height((*root)->right->right)) <= 0)
                     avlsite_rotate_left(root);
                 else
                 {
-                    avlsite_rotate_right(&(*root)->left);
+                    avlsite_rotate_right(&(*root)->right);
                     avlsite_rotate_left(root);
                 }
             }
@@ -277,14 +273,10 @@ SITE *avlsite_search(AVL_SITE *root, unsigned int code)
 
 SITE *avlsite_search_smaller_right(AVL_SITE *root)
 {
-    if(root->left == NULL)
-    {
-        return root->s;
-    }
-    else
-    {
-        avlsite_search_smaller_right(root->left);
-    }
+    AVL_SITE *current = root;
+	while(current->left != NULL)
+		current = current->left;
+	return current->s;
 }
 
 void avlsite_rotate_right(AVL_SITE **root)
