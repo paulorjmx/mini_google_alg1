@@ -6,7 +6,7 @@
 
         void menu();
         void menu_inserir(AVL_SITE **root);
-        void menu_remover(AVL_SITE *root);
+        void menu_remover(AVL_SITE **root);
         void menu_inserir_pchave(AVL_SITE *root);
         void menu_atualizar_relevancia(AVL_SITE *root);
         void menu_busca_palavra(AVL_SITE *root);
