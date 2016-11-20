@@ -12,6 +12,7 @@
         SITE *avlsite_search(AVL_SITE *root, unsigned int code);
         void avlsite_search_keyword(AVL_SITE *root, AVL_SITE **result_tree, char *keyword);
         SITE *avlsite_search_smaller_right(AVL_SITE *root);
+	SITE *avlsite_search_greater_left(AVL_SITE *root);
         void avlsite_free(AVL_SITE **root);
         void avlsite_free_onlynode(AVL_SITE **root);
         void avlsite_inorder(AVL_SITE *root);

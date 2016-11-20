@@ -136,10 +136,10 @@ void menu()
                 break;
 
             case '2':
-                menu_remover(root);
+                menu_remover(&root);
                 while(print_question("Deseja remover mais algum site?[s/N]: ") == 0)
                 {
-                    menu_remover(root);
+                    menu_remover(&root);
                 }
                 break;
 
@@ -253,7 +253,7 @@ int print_question(char *question)
     return answer;
 }
 
-void menu_remover(AVL_SITE *root)
+void menu_remover(AVL_SITE **root)
 {
     unsigned int cod = 0;
     CLEAR_SCREEN();
@@ -263,14 +263,14 @@ void menu_remover(AVL_SITE *root)
     printf("\n#\t\tSites cadastrados \t\t   #\n# \t\t\t\t\t\t   #\n");
     printf("####################################################\n");
     printf("####################################################\n");
-    if(root != NULL)
+    if((*root) != NULL)
     {
-        avlsite_inorder(root);
+        avlsite_inorder((*root));
         printf("\n\nDigite o codigo do site que deseja remover: ");
         scanf("%u", &cod);
-        if(avlsite_search(root, cod) != NULL)
+        if(avlsite_search((*root), cod) != NULL)
         {
-            avlsite_remove_node(&root, cod);
+            avlsite_remove_node(root, cod);
         }
         else
         {
