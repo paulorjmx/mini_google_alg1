@@ -208,14 +208,29 @@ int avlsite_remove_node(AVL_SITE **root, unsigned int code)
                 else
                 {
                     (*root)->s = avlsite_search_smaller_right((*root)->right);
-                    avlsite_remove_node(&(*root)->right, site_get_code((*root)->s));
+					avlsite_remove_node(&(*root)->right, site_get_code((*root)->s));
                 }
             }
-            int fb = (avlsite_height((*root)->left) - avlsite_height((*root)->right));
+        }
+        else
+        {
+            if(site_get_code((*root)->s) > code)
+                avlsite_remove_node(&(*root)->left, code);
+            else
+                avlsite_remove_node(&(*root)->right, code);
+
+			// ROTATION
+			int fb = (avlsite_height((*root)->left) - avlsite_height((*root)->right));
             if(fb == 2)
             {
                 if((avlsite_height((*root)->left->left) - avlsite_height((*root)->left->right)) >= 0)
+				{
                     avlsite_rotate_right(root);
+					//site_to_string((*root)->s);
+					//site_to_string((*root)->right->s);
+					//site_to_string((*root)->left->s);
+					return 0;
+				}
                 else
                 {
                     avlsite_rotate_left(&(*root)->left);
@@ -225,21 +240,15 @@ int avlsite_remove_node(AVL_SITE **root, unsigned int code)
             else if(fb == -2)
             {
                 if((avlsite_height((*root)->right->left) - avlsite_height((*root)->right->right)) <= 0)
+				{
                     avlsite_rotate_left(root);
+				}
                 else
                 {
                     avlsite_rotate_right(&(*root)->right);
                     avlsite_rotate_left(root);
                 }
             }
-            return 0;
-        }
-        else
-        {
-            if(site_get_code((*root)->s) > code)
-                avlsite_remove_node(&(*root)->left, code);
-            else
-                avlsite_remove_node(&(*root)->right, code);
         }
     }
 }
@@ -279,6 +288,13 @@ SITE *avlsite_search_smaller_right(AVL_SITE *root)
 	return current->s;
 }
 
+SITE *avlsite_search_greater_left(AVL_SITE *root)
+{
+	AVL_SITE *current = root;
+	while(current->right != NULL)
+		current = current->right;
+	return current->s;
+}
 void avlsite_rotate_right(AVL_SITE **root)
 {
     AVL_SITE *b = NULL;
