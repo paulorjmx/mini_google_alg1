@@ -226,10 +226,6 @@ int avlsite_remove_node(AVL_SITE **root, unsigned int code)
                 if((avlsite_height((*root)->left->left) - avlsite_height((*root)->left->right)) >= 0)
 				{
                     avlsite_rotate_right(root);
-					//site_to_string((*root)->s);
-					//site_to_string((*root)->right->s);
-					//site_to_string((*root)->left->s);
-					return 0;
 				}
                 else
                 {
